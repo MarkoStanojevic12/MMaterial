@@ -266,6 +266,25 @@ QtObject {
 	property Media.IconData work
 	property Media.IconData dashedCircle
 	property Media.IconData colorize
+	property Media.IconData waterDrop
+	property Media.IconData cafe
+	property Media.IconData fastfood
+	property Media.IconData coffee
+	property Media.IconData cocktail
+	property Media.IconData liquor
+	property Media.IconData beer
+	property Media.IconData tee
+	property Media.IconData drink
+	property Media.IconData wine
+	property Media.IconData noCocktail
+	property Media.IconData juice
+	property Media.IconData waterFull
+	property Media.IconData blender
+	property Media.IconData waterDropFilled
+	property Media.IconData coldTemp
+	property Media.IconData hotTemp
+	property Media.IconData fire
+	property Media.IconData ice
 
 
     function getAll() : list<string> {
