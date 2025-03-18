@@ -5,8 +5,8 @@ Canvas {
     id: dashedLine
 
     property int lineWidth: 1
-    property color lineColor: UI.Theme.other.divider
-    property var dashPattern: [2, 2]
+    property color lineColor: UI.Theme.other.outline
+    property var dashPattern: [3, 3]
     property bool horizontal: true
 
     height: horizontal ? lineWidth : undefined

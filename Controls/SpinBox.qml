@@ -109,7 +109,7 @@ T.SpinBox {
 
 		border {
 			width: 1
-			color: _root.focus ? UI.Theme.action.focus : UI.Theme.action.selected
+			color: control.focus ? UI.Theme.action.focus : UI.Theme.action.selected
 		}
 	}
 }
