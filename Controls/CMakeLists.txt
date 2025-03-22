@@ -39,6 +39,7 @@ list(APPEND CONTROLS_QML_FILES
     ToggleButtonGroup.qml
     SpinBox.qml
     Breadcrumbs.qml
+    SwipeBar.qml
 )
 
 qt_add_qml_module(ControlsLib
