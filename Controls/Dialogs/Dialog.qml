@@ -158,7 +158,7 @@ T.Dialog {
     }
 
     T.Overlay.modal: Rectangle {
-        color: Qt.alpha(Theme.text.primary, 0.18)
+        color: Qt.alpha(UI.Theme.text.primary, 0.18)
     }
 
     T.Overlay.modeless: Rectangle {
