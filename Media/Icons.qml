@@ -13,6 +13,8 @@ QtObject{
 		readonly property string iconBasePath: "qrc:/MMaterial/Media/assets/svg/"
 
 		logo: Media.IconData { path: _heavyRoot.iconBasePath + "logo.svg"; type: Media.IconData.Heavy }
+		emptyCart: Media.IconData { path: _heavyRoot.iconBasePath + "ic-cart.svg"; type: Media.IconData.Heavy }
+		emptyBox: Media.IconData { path: _heavyRoot.iconBasePath + "ic-folder-empty.svg"; type: Media.IconData.Heavy }
     }
 
 	readonly property Media.IconSet light: Media.IconSet {
