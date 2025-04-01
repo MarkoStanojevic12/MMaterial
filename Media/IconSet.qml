@@ -285,6 +285,8 @@ QtObject {
 	property Media.IconData hotTemp
 	property Media.IconData fire
 	property Media.IconData ice
+	property Media.IconData emptyCart
+	property Media.IconData emptyBox
 
 
     function getAll() : list<string> {
