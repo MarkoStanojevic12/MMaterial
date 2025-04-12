@@ -27,7 +27,7 @@ T.Slider {
         implicitHeight: 24
 
         MToolTip {
-            visible: control.hovered
+            visible: control.hovered || control.pressed
             text: control.value.toFixed(control.decimals)
             delay: 200
         }
