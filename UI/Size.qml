@@ -44,10 +44,7 @@ Item {
     property int format: Size.Format.Extended
 
     function autoSetFormat(windowWidth : real, windowHeight : real) : void {
-        if (windowWidth < 500 || Qt.platform.os === "android" || Qt.platform.os === "ios") {
-            root.format = Size.Format.Mobile
-        }
-        else if (windowWidth > windowHeight) {
+        if (windowWidth > windowHeight) {
             root.format = Size.Format.Extended
         } else {
             root.format = Size.Format.Compact
