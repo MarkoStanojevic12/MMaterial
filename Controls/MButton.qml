@@ -100,7 +100,7 @@ Rectangle {
             PropertyChanges { target: _root;  border.width: 0; }
             PropertyChanges {
                 target: _private;
-                backgroundColor: mouseArea.containsMouse ? _root.accent.transparent.p8 : "transparent"
+                backgroundColor: "transparent"
                 textColor:  _root.enabled ? _root.accent.main : UI.Theme.action.disabled
                 borderColor: "transparent"
             }
