@@ -41,14 +41,10 @@ Item {
 
     enum Format { Extended, Compact, Mobile }
 
-    property int format: Size.Format.Extended
+    property int format: Size.Format.Compact
 
     function autoSetFormat(windowWidth : real, windowHeight : real) : void {
-        if (windowWidth > windowHeight) {
-            root.format = Size.Format.Extended
-        } else {
-            root.format = Size.Format.Compact
-        }
+        root.format = Size.Format.Compact
     }
 
 }
