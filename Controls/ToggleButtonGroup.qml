@@ -29,8 +29,8 @@ Item {
 		property real baseSize: root.size == UI.Size.Grade.L ? 56 * UI.Size.scale : root.size == UI.Size.Grade.M ? 48 * UI.Size.scale : 36 * UI.Size.scale
 		property real baseMargins: root.size == UI.Size.Grade.L ? 16 * UI.Size.scale : root.size == UI.Size.Grade.M ? 12 * UI.Size.scale : 8 * UI.Size.scale
 
-		property real prefHeight: (orientation == Qt.Horizontal ? d.baseSize : listView.contentHeight) + d.baseMargins
-		property real prefWidth: (orientation == Qt.Vertical ? d.baseSize : listView.contentWidth) + d.baseMargins
+		property real prefHeight: (orientation == Qt.Horizontal ? d.baseSize + d.baseMargins : listView.contentHeight + (listView.contentHeight > 0 ? + d.baseMargins : 0))
+		property real prefWidth: (orientation == Qt.Vertical ? d.baseSize + d.baseMargins : listView.contentWidth + (listView.contentWidth > 0 ? + d.baseMargins : 0))
 	}
 
 	Rectangle {
