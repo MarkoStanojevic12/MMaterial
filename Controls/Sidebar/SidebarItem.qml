@@ -18,6 +18,4 @@ Item {
     property ChipData chip: ChipData {}
 
     property var onClicked
-
-
 }
