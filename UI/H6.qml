@@ -7,8 +7,9 @@ UI.BaseText {
     elide: Text.ElideRight
 
     font {
-		family: UI.PublicSans.bold
-		pixelSize: UI.Size.pixel18
+        weight: Font.Bold
+        family: UI.PublicSans.bold
+        pixelSize: UI.Size.pixel18
         bold: true
     }
 }

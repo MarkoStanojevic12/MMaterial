@@ -7,7 +7,8 @@ UI.BaseText {
     lineHeight: 1
 
     font {
-		family: UI.PublicSans.extraBold
+        weight: Font.ExtraBold
+        family: UI.PublicSans.extraBold
         pixelSize: UI.Size.pixel64
     }
 }
