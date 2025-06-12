@@ -37,6 +37,7 @@ Rectangle {
     property bool isLoading: false
     property bool backgroundVisible: true
     property string text: "Button"
+	property bool animatePressAndHold: false
 
     property int type: MButton.Type.Contained
     property int size: UI.Size.Grade.L
@@ -45,6 +46,7 @@ Rectangle {
     property alias rightIcon: _rightIcon
 
     signal clicked
+	signal pressAndHold
 
     enum Type {
         Contained,
@@ -70,7 +72,8 @@ Rectangle {
             PropertyChanges { target: _root; border.width: 0 }
             PropertyChanges {
                 target: _private;
-                backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _root.accent.dark : _root.accent.main) : UI.Theme.action.disabledBackground
+				containsMouseColor: _root.accent.dark
+				backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _private.containsMouseColor : _root.accent.main) : UI.Theme.action.disabledBackground
                 textColor: _root.enabled ? _root.accent.contrastText : UI.Theme.action.disabled
                 borderColor: "transparent"
             }
@@ -83,7 +86,8 @@ Rectangle {
             PropertyChanges { target: _root; border.width: 1; }
             PropertyChanges {
                 target: _private;
-                backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _root.accent.transparent.p8 : "transparent") : "transparent"
+				containsMouseColor: _root.accent.transparent.p8
+				backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _private.containsMouseColor : "transparent") : "transparent"
                 textColor: _root.enabled ? _root.accent.main : UI.Theme.action.disabled
                 borderColor:  _root.enabled ? (_root.mouseArea.containsMouse ? _root.accent.main : _root.accent.transparent.p24) : UI.Theme.action.disabled
             }
@@ -109,7 +113,8 @@ Rectangle {
             PropertyChanges { target: _root; border.width: 0; }
             PropertyChanges {
                 target: _private;
-                backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _root.accent.transparent.p32 : _root.accent.transparent.p16) : UI.Theme.action.disabledBackground
+				containsMouseColor: _root.accent.transparent.p32
+				backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _private.containsMouseColor : _root.accent.transparent.p16) : UI.Theme.action.disabledBackground
                 textColor:  _root.enabled ? _root.accent.dark : UI.Theme.action.disabled
                 borderColor: "transparent"
             }
@@ -129,11 +134,56 @@ Rectangle {
         property color textColor: "#FFFFFF"
         property color borderColor: "#FFFFFF"
         property bool oneOrLessChildrenVisible: !_title.visible && (!_leftIcon.visible || !_rightIcon.visible)
+		property color containsMouseColor: "#FFFFFF"
     }
 
     Behavior on implicitWidth {
         NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
     }
+
+	Rectangle {
+		id: _pressAndHoldAnimator
+
+		visible: _root.animatePressAndHold && width > 0
+		color: _private.containsMouseColor
+		radius: _root.radius
+
+		anchors {
+			top: _root.top
+			bottom: _root.bottom
+			left: _root.left
+		}
+
+		states: [
+			State {
+				when: mouseArea.pressed && _root.animatePressAndHold
+				name: "growing"
+
+				PropertyChanges {
+					target: _pressAndHoldAnimator
+					width: _root.width
+				}
+			},
+			State {
+				when: !mouseArea.pressed && _root.animatePressAndHold
+				name: "shrinking"
+
+				PropertyChanges {
+					target: _pressAndHoldAnimator
+					width: 0
+				}
+			}
+		]
+
+		transitions: [
+			Transition {
+				from: "shrinking"
+				to: "growing"
+
+				NumberAnimation { target: _pressAndHoldAnimator; properties: "width"; duration: mouseArea.pressAndHoldInterval }
+			}
+		]
+	}
 
     RowLayout {
         id: _mainLayout
@@ -200,5 +250,6 @@ Rectangle {
         enabled: !_root.isLoading
 
         onClicked: { _root.clicked(); }
+		onPressAndHold: _root.pressAndHold()
     }
 }

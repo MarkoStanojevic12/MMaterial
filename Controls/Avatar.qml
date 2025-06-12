@@ -22,7 +22,8 @@ Rectangle {
     implicitHeight: root.size
     implicitWidth: root.size
 
-    border.width: 0
+	antialiasing: true
+	border.width: -1
 
     states: [
         State {

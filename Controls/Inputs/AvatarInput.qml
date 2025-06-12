@@ -16,10 +16,19 @@ Item {
     property real size: UI.Size.scale * 128
     property alias background: background
 	property color textColor: control.isEmpty ? UI.Theme.text.disabled : UI.Theme.common.white
+	property list<string> acceptedFileTypes: ["jpg", "jpeg", "png", "svg"]
+	property int progress: 100
+
+	signal imageRejected
+	signal imageAccepted(source : url)
 
     function removeImage() {
         removeImageAnimation.start();
     }
+
+	function setSource(newSource) {
+		image.source = source
+	}
 
     implicitHeight: control.size
     implicitWidth: control.size
@@ -28,6 +37,7 @@ Item {
         id: d
 
         property url imageSource: ""
+		property bool isUploading: control.progress < 100 && imageSource.toString() !== ""
 
         function addImage() {
             image.source = d.imageSource
@@ -42,11 +52,12 @@ Item {
     FileDialog {
         id: fileDialog
 
-        nameFilters: ["Images (*.jpg *.jpeg *.png *.svg)"]
+		nameFilters: ["Images (*." + acceptedFileTypes.join(" *.") + ")"]
         currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
         onAccepted: {
             d.imageSource = selectedFile;
             imageAnimation.start();
+			control.imageAccepted(control.source)
         }
     }
 
@@ -106,7 +117,7 @@ Item {
             anchors.fill: background
             visible: opacity > 0
 			color: UI.Theme.main.p900
-            opacity: hoverHandler.hovered && !control.isEmpty && !imageAnimation.running ? (tap.pressed ? 0.4 :  0.64) : 0
+			opacity: (hoverHandler.hovered && !control.isEmpty && !imageAnimation.running) || d.isUploading ? (tap.pressed ? 0.4 :  0.64) : 0
             radius: background.radius
 
             Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
@@ -115,7 +126,7 @@ Item {
         ColumnLayout {
             anchors.fill: background
             spacing: UI.Size.pixel8
-            opacity: ((hoverHandler.hovered && !control.isEmpty) || control.isEmpty) && !imageAnimation.running ? 1 : 0
+			opacity: ((hoverHandler.hovered && !control.isEmpty) || control.isEmpty || d.isUploading) && !imageAnimation.running ? 1 : 0
             visible: opacity > 0
 
             Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
@@ -126,11 +137,11 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
                 size: UI.Size.pixel24
 				color: control.textColor.toString()
-                iconData: Media.Icons.light.addAPhoto
+				iconData: d.isUploading ? Media.Icons.light.uploadFile : Media.Icons.light.addAPhoto
             }
 
 			UI.Caption {
-                text: control.isEmpty ? qsTr("Upload photo") : qsTr("Update photo")
+				text: d.isUploading ? control.progress + qsTr("% Uploaded") : (control.isEmpty ? qsTr("Upload photo") : qsTr("Update photo"))
                 color: control.textColor
                 Layout.fillWidth: true
                 horizontalAlignment: Qt.AlignHCenter
@@ -147,6 +158,8 @@ Item {
 
         HoverHandler {
             id: hoverHandler
+
+			cursorShape: Qt.PointingHandCursor
         }
     }
 
@@ -161,12 +174,16 @@ Item {
                        if (dragEvent.hasUrls) {
                            for (var i = 0; i < dragEvent.urls.length; ++i) {
                                var url = dragEvent.urls[i];
-                               if (url.toString().toLowerCase().endsWith(".png") ||
-                                   url.toString().toLowerCase().endsWith(".jpg") ||
-                                   url.toString().toLowerCase().endsWith(".jpeg")) {
-                                   d.imageSource = url;  // Set the source of the Image element
-                                   imageAnimation.start();
-                               }
+							   const urlStr = url.toString().toLowerCase();
+
+							   if (control.acceptedFileTypes.some(ext => urlStr.endsWith("." + ext))) {
+								   d.imageSource = url;
+								   imageAnimation.start();
+								   control.imageAccepted(control.source)
+							   }
+							   else {
+								   control.imageRejected();
+							   }
                            }
                        }
                    }
