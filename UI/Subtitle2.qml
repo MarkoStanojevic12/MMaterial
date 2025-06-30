@@ -7,8 +7,7 @@ UI.BaseText {
 	wrapMode: Text.WordWrap
 
 	font {
-		family: UI.PublicSans.semiBold
+        variableAxes: { "wght": 600 }
 		pixelSize: UI.Size.pixel14
-		weight: Font.DemiBold
 	}
 }

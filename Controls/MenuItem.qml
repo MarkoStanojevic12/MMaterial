@@ -28,7 +28,7 @@ T.MenuItem {
     }
 
     font {
-		family: UI.PublicSans.regular
+        family: UI.Font.normalFamily
         pixelSize: UI.Size.pixel14
     }
 

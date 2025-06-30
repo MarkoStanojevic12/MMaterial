@@ -1,5 +1,5 @@
 list(APPEND QML_UI_SINGLETONS
-    PublicSans.qml
+    Font.qml
     Theme.qml
     DarkTheme.qml
     LightTheme.qml
@@ -13,16 +13,6 @@ list(APPEND QML_UI_SINGLETONS
     Size.qml
 )
 
-list(APPEND FONT_ASSETS
-    Families/PublicSans/PublicSans-ExtraBold.ttf
-    Families/PublicSans/PublicSans-Bold.ttf
-    Families/PublicSans/PublicSans-SemiBold.ttf
-    Families/PublicSans/PublicSans-Medium.ttf
-    Families/PublicSans/PublicSans-Regular.ttf
-    Families/PublicSans/PublicSans-Light.ttf
-    Families/PublicSans/PublicSans-ExtraLight.ttf
-)
-
 list(APPEND UI_QML_FILES
     PaletteTransparent.qml
     PaletteCommon.qml
@@ -34,7 +24,6 @@ list(APPEND UI_QML_FILES
     PaletteOther.qml
     PaletteAction.qml
     ThemeBase.qml
-    BaseFont.qml
     H1.qml
     H2.qml
     H3.qml
@@ -51,6 +40,7 @@ list(APPEND UI_QML_FILES
     EasedAnimation.qml
     ElasticAnimation.qml
     DashedLine.qml
+    Pre.qml
 )
 
 set_source_files_properties(
@@ -65,17 +55,6 @@ qt_add_qml_module(UILib
     QML_FILES
         ${QML_UI_SINGLETONS}
         ${UI_QML_FILES}
-
-    RESOURCES ${FONT_ASSETS}
-)
-
-qt_add_resources(MMaterialLib
-    "mmaterial_font_assets"
-    BASE "${CMAKE_CURRENT_SOURCE_DIR}"
-    PREFIX "MMaterial"
-    BIG_RESOURCES
-    FILES
-    ${FONT_ASSETS}
 )
 
 set_target_properties(UILib PROPERTIES AUTOMOC ON)

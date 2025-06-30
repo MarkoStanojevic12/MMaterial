@@ -13,7 +13,6 @@ T.ComboBox {
 	id: root
 
 	property int delegateCount: 5
-	property real delegateHeight: UI.Size.pixel46
 	property int type: Inputs.TextField.Type.Outlined
 	property UI.PaletteBasic accent: UI.Theme.primary
 	property Media.IconData iconData: null
@@ -33,7 +32,7 @@ T.ComboBox {
 	rightPadding: d.horizontalPadding + (root.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
 
 	font {
-		family: UI.PublicSans.regular
+		family: UI.Font.normalFamily
 		pixelSize: UI.Size.pixel12
 	}
 

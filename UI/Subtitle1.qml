@@ -7,8 +7,7 @@ UI.BaseText {
 	lineHeight: 1
 
 	font {
-		family: UI.PublicSans.semiBold
+        variableAxes: { "wght": 600 }
 		pixelSize: UI.Size.pixel16
-		weight: Font.DemiBold
 	}
 }

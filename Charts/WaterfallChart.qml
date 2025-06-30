@@ -198,8 +198,7 @@ Item {
                             wrapMode: Text.NoWrap
                             text: (verticalBar.isNegative ? "" : "+") + percentage.toString() + "%"
                             color: tooltip.accent.darker
-                            font.family: UI.PublicSans.extraBold
-                            font.bold: true
+                            font.variableAxes: { "wght": 700 }
                         }
 
 						UI.Subtitle2 {

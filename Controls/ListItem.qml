@@ -41,7 +41,8 @@ AbstractListItem{
             Layout.alignment: Qt.AlignVCenter
 
             verticalAlignment: Qt.AlignVCenter
-			font.family: _root.selected ? UI.PublicSans.semiBold : UI.PublicSans.regular
+            font.family: UI.Font.normalFamily
+            font.variableAxes: { "wght": _root.selected ? 600 : 400 }
 			color: _root.selected ? UI.Theme.text.primary : UI.Theme.text.secondary
         }
     }

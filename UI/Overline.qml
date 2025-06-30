@@ -7,10 +7,8 @@ UI.BaseText {
 	wrapMode: Text.WordWrap
 
 	font {
-		// family: UI.PublicSans.bold
+        variableAxes: { "wght": 700 }
 		pixelSize: UI.Size.pixel12
 		capitalization: Font.AllUppercase
-		bold: true
-		weight: Font.Bold
-	}
+    }
 }

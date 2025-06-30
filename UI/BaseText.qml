@@ -10,6 +10,7 @@ Text {
     property bool showTooltip: _root.truncated
 
 	color: UI.Theme.text.primary
+    font.family: UI.Font.normalFamily
 
     HoverHandler{
         id: _hoverHandler

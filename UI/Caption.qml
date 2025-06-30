@@ -6,8 +6,6 @@ UI.BaseText {
 	wrapMode: Text.WordWrap
 
 	font {
-		family: UI.PublicSans.regular
 		pixelSize: UI.Size.pixel12
-		weight: Font.Normal
 	}
 }

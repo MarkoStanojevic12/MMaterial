@@ -61,7 +61,7 @@ Controls.Checkable {
             when: !_root.enabled
             PropertyChanges{ target: _root; opacity: 0.64 }
             PropertyChanges{ target: _background; color: "transparent" }
-			PropertyChanges { target: _title; font.family: UI.PublicSans.regular; color: UI.Theme.text.secondary }
+            PropertyChanges { target: _title; font.variableAxes: { "wght": 400 }; color: UI.Theme.text.secondary }
 			PropertyChanges{ target: _icon; color: UI.Theme.text.secondary }
 			PropertyChanges{ target: _arrow; color: UI.Theme.text.secondary }
         },
@@ -70,7 +70,7 @@ Controls.Checkable {
             when: _root.checked
             PropertyChanges{ target: _root; opacity: 1;}
 			PropertyChanges{ target: _background; color: _root.mouseArea.containsMouse ? UI.Theme.primary.transparent.p16 : UI.Theme.primary.transparent.p8; }
-			PropertyChanges { target: _title; font.family: UI.PublicSans.semiBold; color: UI.Theme.primary.main; }
+            PropertyChanges { target: _title; font.variableAxes: { "wght": 600 }; color: UI.Theme.primary.main; }
 			PropertyChanges{ target: _icon; color: UI.Theme.primary.main }
 			PropertyChanges{ target: _arrow; color: UI.Theme.primary.main; }
         },
@@ -79,7 +79,7 @@ Controls.Checkable {
             when: !_root.checked
             PropertyChanges{ target: _root; opacity: 1;}
 			PropertyChanges{ target: _background; color: _root.mouseArea.containsMouse ? UI.Theme.background.neutral : "transparent"; }
-			PropertyChanges { target: _title; font.family: UI.PublicSans.regular; color: UI.Theme.text.secondary }
+            PropertyChanges { target: _title; font.variableAxes: { "wght": 400 }; color: UI.Theme.text.secondary }
 			PropertyChanges{ target: _icon; color: UI.Theme.text.secondary }
 			PropertyChanges{ target: _arrow; color: UI.Theme.text.secondary }
         }
