@@ -142,14 +142,14 @@ Rectangle {
 
 		scale: _label.scale
 
-		height: _label.height
+		height: root.border.width * 2
 		width: _label.width
 		visible: _label.text !== "" && root.rootItem.type === TextField.Outlined
 		color: root.color
 		radius: UI.Size.pixel8
 
 		anchors {
-			verticalCenter: _label.verticalCenter
+			top: root.top
 			left: _label.left
 			right: _label.right
 			leftMargin: -UI.Size.pixel4
