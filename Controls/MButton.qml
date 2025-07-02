@@ -115,7 +115,7 @@ Rectangle {
                 target: _private;
 				containsMouseColor: _root.accent.transparent.p32
 				backgroundColor: _root.enabled ? (mouseArea.containsMouse ? _private.containsMouseColor : _root.accent.transparent.p16) : UI.Theme.action.disabledBackground
-                textColor:  _root.enabled ? _root.accent.dark : UI.Theme.action.disabled
+				textColor:  _root.enabled ? _root.accent.main : UI.Theme.action.disabled
                 borderColor: "transparent"
             }
             PropertyChanges{ target: _leftIcon; color: _private.textColor }

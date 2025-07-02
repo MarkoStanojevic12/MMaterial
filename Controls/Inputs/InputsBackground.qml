@@ -31,7 +31,7 @@ Rectangle {
 		},
 		State {
 			name: "error-filled"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Filled
+			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: UI.Theme.error.transparent.p8; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -63,7 +63,7 @@ Rectangle {
 		},
 		State {
 			name: "error-outlined"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Outlined
+			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -95,7 +95,7 @@ Rectangle {
 		},
 		State {
 			name: "error"
-			when: !root.rootItem.acceptableInput
+			when: !root.rootItem.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -142,9 +142,9 @@ Rectangle {
 
 		scale: _label.scale
 
-		height: root.border.width * 2
+		height: _label.height
 		width: _label.width
-		visible: _label.text !== ""
+		visible: _label.text !== "" && root.rootItem.type === TextField.Outlined
 		color: root.color
 		radius: UI.Size.pixel8
 
@@ -172,7 +172,7 @@ Rectangle {
 
 		lineHeight: 1
 
-		state: "foreground"
+		state: root.showPlaceholder ? "foreground" : "background"
 		states: [
 			State {
 				name: "foreground"
@@ -181,10 +181,21 @@ Rectangle {
 				PropertyChanges { target: root.iconContainer; anchors { topMargin: 0; } }
 				PropertyChanges{
 					target: _label;
-					font.pixelSize: d.fontSize * 1.4;
-					y: root.rootItem.height / 2 - _label.height / 2
+					font.pixelSize: d.fontSize
+					opacity: root.rootItem.acceptableInput ? 1 : 0.62
+					y: {
+						if (root.rootItem instanceof Inputs.TextArea) {
+							if (root.rootItem.type == Inputs.TextField.Filled)
+								return root.rootItem.topPadding / 2
+							else
+								return root.rootItem.topPadding
+						}
+						return root.rootItem.height / 2 - _label.height / 2
+					}
+
 					x: root.rootItem instanceof Inputs.ComboBox ?
 						0 :
+						root.rootItem instanceof Inputs.TextArea ? root.rootItem.leftPadding :
 						(root.rootItem.type === Inputs.TextField.Type.Standard ?
 							 (root.leftIcon.visible ? root.leftIcon.size / 2 + root.rootItem.leftPadding : 0) :
 							 (root.leftIcon.visible ? (root.leftIcon.size / 2 + root.rootItem.leftPadding ) : root.rootItem.leftPadding))
@@ -197,8 +208,8 @@ Rectangle {
 				PropertyChanges { target: root.iconContainer; anchors { topMargin: root.rootItem.type === TextField.Type.Outlined ? 0 : UI.Size.pixel16; } }
 				PropertyChanges{
 					target: _label;
-					font.pixelSize: d.fontSize
-					x:  root.type === Inputs.TextField.Type.Standard ? 0 : root.rootItem.leftPadding - (root.leftIcon.visible ? root.leftIcon.width + UI.Size.pixel8 : 0)
+					font.pixelSize: d.fontSize * 0.7
+					x: root.rootItem.type === Inputs.TextField.Type.Standard ? 0 : root.rootItem.leftPadding - (root.leftIcon && root.leftIcon.visible ? root.leftIcon.width + UI.Size.pixel8 : 0)
 					y: root.rootItem.type === Inputs.TextField.Type.Outlined ? -height/2 : height/2;
 				}
 			}

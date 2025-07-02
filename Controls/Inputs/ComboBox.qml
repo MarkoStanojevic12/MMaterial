@@ -20,7 +20,6 @@ T.ComboBox {
 	property string placeholderText: qsTr("Placeholder")
 	property color placeholderTextColor: UI.Theme.text.primary
 	property alias color: _textField.color
-	readonly property real delegateHeight: UI.Size.pixel46
 
 	implicitHeight: 48 * UI.Size.scale
 	implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
@@ -34,7 +33,7 @@ T.ComboBox {
 
 	font {
 		family: UI.PublicSans.regular
-		pixelSize: UI.Size.pixel12
+		pixelSize: UI.Size.pixel14
 	}
 
 	QtObject{
@@ -71,7 +70,7 @@ T.ComboBox {
 
 		rootItem: root
 		ignoreDisabledColoring: root.enabled
-		showPlaceholder: !root.focus && root.currentText === "" && !root.down && root.placeholderText !== ""
+		showPlaceholder: !root.focus && root.displayText === "" && !root.down && root.placeholderText !== ""
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
 	}

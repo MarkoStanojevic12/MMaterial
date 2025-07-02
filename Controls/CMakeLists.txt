@@ -40,6 +40,7 @@ list(APPEND CONTROLS_QML_FILES
     SpinBox.qml
     Breadcrumbs.qml
     SwipeBar.qml
+    ScrollView.qml
 )
 
 qt_add_qml_module(ControlsLib

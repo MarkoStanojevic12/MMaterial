@@ -34,9 +34,8 @@ T.TextField {
 
 	font {
 		family: UI.PublicSans.regular
-		pixelSize: UI.Size.pixel12
+		pixelSize: UI.Size.pixel14
 	}
-
 	QtObject{
 		id: d
 

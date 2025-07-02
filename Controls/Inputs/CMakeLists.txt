@@ -24,6 +24,7 @@ qt_add_qml_module(InputsLib
         ColorSlider.qml
         OpacitySlider.qml
         InputsBackground.qml
+        TextArea.qml
     SOURCES
         ${INPUTS_SOURCES}
 )

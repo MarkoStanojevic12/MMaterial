@@ -13,6 +13,8 @@ Item {
 	readonly property bool isEmpty: image.source.toString() === "" || removeImageAnimation.running
     readonly property url source: image.source
 
+	property alias radius: image.radius
+
     property real size: UI.Size.scale * 128
     property alias background: background
 	property color textColor: control.isEmpty ? UI.Theme.text.disabled : UI.Theme.common.white
@@ -27,7 +29,7 @@ Item {
     }
 
 	function setSource(newSource) {
-		image.source = source
+		image.source = newSource
 	}
 
     implicitHeight: control.size
@@ -74,7 +76,7 @@ Item {
             id: background
 
             color: UI.Theme.background.neutral
-            radius: control.height / 2
+			radius: image.radius
             opacity: tap.pressed ? 0.6 : (hoverHandler.hovered ? 0.8 : 1)
 
             Behavior on opacity { NumberAnimation { duration: 50 } }
