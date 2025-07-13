@@ -49,7 +49,7 @@ Rectangle {
         anchors.centerIn: _root
 
 		iconData: Media.Icons.heavy.logo
-		visible: iconData.path !== ""
+		visible: iconData && iconData.path !== ""
         size: _root.height * 0.7
 
 		states: [

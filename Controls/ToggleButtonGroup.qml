@@ -10,6 +10,8 @@ Item {
 	property alias model: listView.model
 	property alias background: background
 	property alias delegate: listView.delegate
+	property alias currentIndex: listView.currentIndex
+	property alias currentItem: listView.currentItem
 
 	property alias orientation: listView.orientation
 

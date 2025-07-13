@@ -51,6 +51,7 @@ list(APPEND UI_QML_FILES
     EasedAnimation.qml
     ElasticAnimation.qml
     DashedLine.qml
+    Teardrop.qml
 )
 
 set_source_files_properties(
