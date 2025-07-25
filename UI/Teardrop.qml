@@ -37,6 +37,7 @@ Shape {
 
 	ShapePath {
 		strokeWidth: 0
+		strokeColor: root.color
 		fillColor: root.color
 
 		startX: 0
