@@ -6,7 +6,7 @@ import MMaterial.Media as Media
 Media.IconBase {
     id: _root
 
-    Text {
+	Text {
         anchors {
             centerIn: _root
         }
