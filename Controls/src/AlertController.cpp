@@ -1,6 +1,4 @@
 #include "AlertController.h"
-#include <qdebug.h>
-
 
 AlertController::AlertController(QObject* parent)
 	: QObject(parent)
