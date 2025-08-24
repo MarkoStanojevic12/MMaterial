@@ -52,6 +52,7 @@ T.MenuItem {
             }
 
 			Media.Icon {
+				Layout.leftMargin: UI.Size.pixel8
                 size: control.icon.height
                 iconData: control.iconData
 				visible: control.useIcons
