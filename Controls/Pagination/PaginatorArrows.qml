@@ -7,7 +7,7 @@ import MMaterial.Media as Media
 Item {
     id: _root
 
-    required property SwipeView indexView
+	required property ListView indexView
 
     anchors {
         left: _root.indexView.left
