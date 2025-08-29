@@ -194,7 +194,7 @@ Rectangle {
 					}
 
 					x: root.rootItem instanceof Inputs.ComboBox ?
-						0 :
+						root.rootItem.leftPadding :
 						root.rootItem instanceof Inputs.TextArea ? root.rootItem.leftPadding :
 						(root.rootItem.type === Inputs.TextField.Type.Standard ?
 							 (root.leftIcon.visible ? root.leftIcon.size / 2 + root.rootItem.leftPadding : 0) :
