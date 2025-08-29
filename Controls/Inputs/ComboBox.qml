@@ -18,6 +18,7 @@ T.ComboBox {
 	property Media.IconData iconData: null
 	property string placeholderText: qsTr("Placeholder")
 	property color placeholderTextColor: UI.Theme.text.primary
+	property real delegateHeight: UI.Size.pixel46
 	property alias color: _textField.color
 
 	implicitHeight: 48 * UI.Size.scale
@@ -69,7 +70,7 @@ T.ComboBox {
 
 		rootItem: root
 		ignoreDisabledColoring: root.enabled
-		showPlaceholder: !root.focus && root.displayText === "" && !root.down && root.placeholderText !== ""
+		showPlaceholder: !root.focus && root.currentText === "" && !root.down && root.placeholderText !== ""
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
 	}
