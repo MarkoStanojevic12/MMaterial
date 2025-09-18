@@ -82,7 +82,7 @@ Rectangle {
 		State {
 			name: "normal-outlined"
 			when: root.rootItem.type == TextField.Type.Outlined
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.action.disabledBackground} }
+			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.action.disabled} }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
 		},
 
