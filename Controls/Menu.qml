@@ -50,7 +50,7 @@ T.Menu {
 
     background: Rectangle {
         radius: UI.Size.pixel6
-        implicitWidth:  UI.Size.scale * 420
+        implicitWidth:  UI.Size.scale * 320
         implicitHeight: UI.Size.pixel36
 		color: UI.Theme.background.paper
 

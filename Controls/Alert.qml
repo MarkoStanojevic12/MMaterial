@@ -112,7 +112,7 @@ Rectangle {
 			color: UI.Theme.info.darker
             verticalAlignment: Qt.AlignVCenter
             elide: Text.ElideNone
-            wrapMode: Text.WordWrap
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             lineHeight: 1
         }
 
