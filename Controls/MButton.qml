@@ -197,7 +197,7 @@ Rectangle {
 			id: _leftIcon
 
 			Layout.alignment: _title.visible ? Qt.AlignLeft : Qt.AlignCenter
-			size: _title.contentHeight * 0.65
+			size: _title.contentHeight * 0.8
 			visible: iconData && !_root.isLoading
 		}
 
@@ -226,7 +226,7 @@ Rectangle {
 			Layout.alignment: _title.visible ? Qt.AlignRight : Qt.AlignCenter
 
 			visible: iconData && !_root.isLoading
-			size: _title.contentHeight * 0.65
+			size: _title.contentHeight * 0.8
 		}
 
 		BusyIndicator{
