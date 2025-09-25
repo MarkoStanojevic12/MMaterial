@@ -14,11 +14,11 @@ T.ToolTip {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
 
-    margins: 6
-    leftPadding: 12
-    rightPadding: 12
-    topPadding: 8
-    bottomPadding: 8
+    margins: UI.Size.pixel6
+    leftPadding: UI.Size.pixel12
+    rightPadding: UI.Size.pixel12
+    topPadding: UI.Size.pixel8
+    bottomPadding: UI.Size.pixel8
 
     closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutsideParent | T.Popup.CloseOnReleaseOutsideParent
 
@@ -26,12 +26,20 @@ T.ToolTip {
         text: control.text
         wrapMode: Text.Wrap
 		color: UI.Theme.background.main
+        font {
+            pixelSize: UI.Size.pixel14
+            family: UI.Font.normal
+        }
     }
 
     background: Rectangle {
-        radius: 10
+        radius: UI.Size.pixel10
 		color: UI.Theme.text.primary
-        opacity: 0.8
+
+        border {
+            width: 1
+            color: UI.Theme.other.outline
+        }
     }
 
     enter: Transition {
