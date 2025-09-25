@@ -5,4 +5,6 @@ QtObject {
 
     property string path
     property int type
+    property real brightness: 0.7
+    property real colorization: 1
 }
