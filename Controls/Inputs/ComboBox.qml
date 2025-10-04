@@ -73,6 +73,7 @@ T.ComboBox {
 		showPlaceholder: !root.focus && root.currentText === "" && !root.down && root.placeholderText !== ""
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
+		acceptableInput: _textField.acceptableInput
 	}
 
 	contentItem: T.TextField {
@@ -96,6 +97,7 @@ T.ComboBox {
 		placeholderTextColor: UI.Theme.text.primary.toString() 
 
 		topPadding: root.type === Inputs.TextField.Type.Standard || root.type === Inputs.TextField.Type.Filled ? root.height * 0.3 : 0
+		onCursorPositionChanged: console.log(_textField.acceptableInput, root.acceptableInput)
 	}
 
 	indicator: Media.Icon {

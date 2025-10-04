@@ -13,6 +13,7 @@ Rectangle {
 
 	property bool ignoreDisabledColoring: false
 	property bool showPlaceholder: true
+	property bool acceptableInput: rootItem.acceptableInput
 
 	radius: UI.Size.pixel8
 
@@ -31,7 +32,7 @@ Rectangle {
 		},
 		State {
 			name: "error-filled"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
+			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: UI.Theme.error.transparent.p8; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -63,7 +64,7 @@ Rectangle {
 		},
 		State {
 			name: "error-outlined"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
+			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -95,7 +96,7 @@ Rectangle {
 		},
 		State {
 			name: "error"
-			when: !root.rootItem.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
+			when: !root.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
 			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.error.main } }
 			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
 		},
@@ -182,7 +183,7 @@ Rectangle {
 				PropertyChanges{
 					target: _label;
 					font.pixelSize: d.fontSize
-					opacity: root.rootItem.acceptableInput ? 1 : 0.62
+					opacity: root.acceptableInput ? 1 : 0.62
 					y: {
 						if (root.rootItem instanceof Inputs.TextArea) {
 							if (root.rootItem.type == Inputs.TextField.Filled)
