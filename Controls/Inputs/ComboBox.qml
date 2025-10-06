@@ -163,7 +163,9 @@ T.ComboBox {
 			clip: true
 			currentIndex: root.highlightedIndex
 
-			ScrollIndicator.vertical: Controls.MScrollIndicator {}
+			ScrollBar.vertical: Controls.ScrollBar {
+				policy: _listView.contentHeight > height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+			}
 		}
 	}
 }

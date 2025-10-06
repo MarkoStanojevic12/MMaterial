@@ -56,6 +56,7 @@ RowLayout {
 
         color: _root.backgroundColor
         radius: 50
+        clip: true
 
         Rectangle {
             id: _innerBar
@@ -75,7 +76,7 @@ RowLayout {
         }
     }
 
-	UI.Caption{
+    UI.Caption {
         id: _label
 
         Layout.preferredWidth: contentWidth

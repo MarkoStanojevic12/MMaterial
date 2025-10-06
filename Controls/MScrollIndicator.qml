@@ -1,12 +1,18 @@
 import QtQuick
+import QtQuick.Templates as T
 import QtQuick.Controls.Material
 
 import MMaterial.UI as UI
 
-ScrollIndicator {
+T.ScrollIndicator {
 	id: root
 
-	property color color: UI.Theme.primary.main
+	property color color: UI.Theme.action.active
+
+	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+							implicitContentWidth + leftPadding + rightPadding)
+	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+							 implicitContentHeight + topPadding + bottomPadding)
 
 	contentItem: Rectangle {
 		implicitWidth: UI.Size.pixel4
