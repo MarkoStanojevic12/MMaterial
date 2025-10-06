@@ -41,6 +41,7 @@ list(APPEND CONTROLS_QML_FILES
     Breadcrumbs.qml
     SwipeBar.qml
     ScrollView.qml
+    Chip.qml
 )
 
 qt_add_qml_module(ControlsLib
