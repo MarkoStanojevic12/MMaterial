@@ -14,7 +14,7 @@ T.Menu {
                              contentHeight + topPadding + bottomPadding)
 
     margins: 0
-    overlap: 1
+	overlap: 1
 
     delegate: MenuItem { height: UI.Size.pixel36 }
 
@@ -31,10 +31,11 @@ T.Menu {
     contentItem: Item {
         id: contentItemRoot
 
-        implicitHeight: listView.implicitHeight + UI.Size.pixel16
+		implicitHeight: listView.implicitHeight + UI.Size.pixel8
 
         ListView {
             id: listView
+
             anchors.centerIn: contentItemRoot
             implicitHeight: contentHeight
             width: contentItemRoot.width
@@ -49,14 +50,14 @@ T.Menu {
     }
 
     background: Rectangle {
-        radius: UI.Size.pixel6
+		radius: UI.Size.pixel12
         implicitWidth:  UI.Size.scale * 420
         implicitHeight: UI.Size.pixel36
 		color: UI.Theme.background.paper
 
         border {
 			color:  UI.Theme.other.divider
-            width: 1
+			width: 0.5
         }
     }
 

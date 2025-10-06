@@ -19,6 +19,9 @@ T.ComboBox {
 	property string placeholderText: qsTr("Placeholder")
 	property color placeholderTextColor: UI.Theme.text.primary
 	property real delegateHeight: UI.Size.pixel46
+	property bool checkable: false
+	property var showPlaceholder: null
+
 	property alias color: _textField.color
 
 	implicitHeight: 48 * UI.Size.scale
@@ -36,10 +39,10 @@ T.ComboBox {
 		pixelSize: UI.Size.pixel14
 	}
 
-	QtObject{
+	QtObject {
 		id: d
 
-		readonly property real horizontalPadding: root.height / 4
+		readonly property real horizontalPadding: UI.Size.pixel16
 	}
 
 	Item {
@@ -70,7 +73,7 @@ T.ComboBox {
 
 		rootItem: root
 		ignoreDisabledColoring: root.enabled
-		showPlaceholder: !root.focus && root.currentText === "" && !root.down && root.placeholderText !== ""
+		showPlaceholder: root.showPlaceholder === null ? (!root.focus && root.currentText === "" && !root.down && root.placeholderText !== "") : root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
 	}
@@ -81,7 +84,7 @@ T.ComboBox {
 		text: root.editable ? root.editText : root.displayText
 		placeholderText: ""
 		enabled: root.editable
-		autoScroll: root.editable
+		autoScroll: root.editable || root.checkable
 		readOnly: root.down
 		inputMethodHints: root.inputMethodHints
 		validator: root.validator
@@ -91,6 +94,7 @@ T.ComboBox {
 		implicitHeight: 52 * UI.Size.scale
 		implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
 
+		color: UI.Theme.text.primary.toString()
 		selectedTextColor: acceptableInput ? root.accent.contrastText : UI.Theme.error.contrastText
 		selectionColor: acceptableInput ? root.accent.main : UI.Theme.error.main
 		placeholderTextColor: UI.Theme.text.primary.toString() 
@@ -113,6 +117,7 @@ T.ComboBox {
 		required property int index
 		required property var model
 
+		checkable: root.checkable
 		implicitHeight: root.delegateHeight
 		horizontalPadding: UI.Size.pixel12
 		width: ListView.view.width
@@ -156,7 +161,7 @@ T.ComboBox {
 			clip: true
 			currentIndex: root.highlightedIndex
 
-			ScrollIndicator.vertical: T.ScrollIndicator {}
+			ScrollIndicator.vertical: Controls.MScrollIndicator {}
 		}
 	}
 }

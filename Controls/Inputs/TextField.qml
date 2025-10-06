@@ -36,6 +36,7 @@ T.TextField {
 		family: UI.Font.normal
 		pixelSize: UI.Size.pixel14
 	}
+
 	QtObject{
 		id: d
 

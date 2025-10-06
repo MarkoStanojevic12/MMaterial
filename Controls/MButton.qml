@@ -8,6 +8,8 @@ import MMaterial.Media as Media
 Rectangle {
 	id: _root
 
+	default property alias container: _mainLayout.data
+
 	property alias mouseArea: mouseArea
 	property alias title: _title
 	property UI.PaletteBasic accent: UI.Theme.primary //Needs to be PaletteBasic type
