@@ -31,7 +31,7 @@ QtObject{
 	property UI.PaletteBasic passive: UI.PaletteBasic{
         darker: root.main.transparent.p32
         dark: root.main.transparent.p16
-        main: root.text.primary
+		main: root.text.secondary
         light: root.main.transparent.p16
         lighter: root.main.transparent.p32
 		contrastText: root.text.primary

@@ -7,12 +7,14 @@ import MMaterial.Media as Media
 QtObject{
     id: _root
 
+	property string appLogoPath: ""
+
 	readonly property Media.IconSet heavy: Media.IconSet {
         id: _heavyRoot
 
 		readonly property string iconBasePath: "qrc:/MMaterial/Media/assets/svg/"
 
-		logo: Media.IconData { path: _heavyRoot.iconBasePath + "logo.svg"; type: Media.IconData.Heavy }
+		logo: Media.IconData { path: _root.appLogoPath ? _root.appLogoPath : _heavyRoot.iconBasePath + "logo.svg"; type: Media.IconData.Heavy }
 		accountBalance: Media.IconData { path: _heavyRoot.iconBasePath + "account_balance.svg"; type: Media.IconData.Heavy }
 		accountBox: Media.IconData { path: _heavyRoot.iconBasePath + "account_box.svg"; type: Media.IconData.Heavy }
 		accountCircle: Media.IconData { path: _heavyRoot.iconBasePath + "account_circle.svg"; type: Media.IconData.Heavy }

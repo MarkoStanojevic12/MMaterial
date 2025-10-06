@@ -12,6 +12,7 @@ RowLayout {
     property color foregroundColor: accent.main
     property color backgroundColor: accent.transparent.p24
     property bool showLabel: false
+    property bool indeterminate: false
     
     property alias barHeight: _bar.height
     property alias label: _label
@@ -20,6 +21,31 @@ RowLayout {
 
     implicitWidth: 300
 	implicitHeight: UI.Size.pixel10
+
+    SequentialAnimation {
+        id: indeterminateAnimation
+
+        running: _root.indeterminate
+        loops: Animation.Infinite
+
+        UI.EasedAnimation {
+            target: _innerBar
+            property: "anchors.leftMargin"
+
+            from: 0
+            to: _bar.width - _innerBar.width
+            duration: 800
+        }
+
+        UI.EasedAnimation {
+            target: _innerBar
+            property: "anchors.leftMargin"
+
+            from: _bar.width - _innerBar.width
+            to: 0
+            duration: 800
+        }
+    }
 
     Rectangle {
         id: _bar
@@ -40,7 +66,7 @@ RowLayout {
                 bottom: _bar.bottom
             }
 
-            width: _root.progress * _bar.width / 100
+            width: _root.indeterminate ? _bar.width * 0.25 : _root.progress * _bar.width / 100
 
             color: _root.foregroundColor
             radius: _bar.radius

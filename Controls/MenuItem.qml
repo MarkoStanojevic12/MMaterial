@@ -97,7 +97,6 @@ T.MenuItem {
     }
 
     background: Rectangle {
-        implicitWidth: 420 * UI.Size.scale
         implicitHeight: UI.Size.pixel36
 		x: UI.Size.pixel4
 		width: control.width - UI.Size.pixel8

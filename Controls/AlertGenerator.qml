@@ -14,8 +14,11 @@ Popup {
     property int edgeOf: Item.TopLeft //TopRight, BottomLeft, BottomRight
     property int defaultVariant: Alert.Variant.Standard
 
-    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left ? 20 : Overlay.overlay.width - 20 - width
-    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top ? 20 : Overlay.overlay.height - 20 - height
+    property real horizontalMargin: UI.Size.pixel20
+    property real verticalMargin: UI.Size.pixel20
+
+    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left ? 20 : Overlay.overlay.width - horizontalMargin - width
+    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top ? 20 : Overlay.overlay.height - verticalMargin - height
 
     enter: null
 
@@ -73,7 +76,7 @@ Popup {
             Timer {
                 id: _timer
 
-                running: _root.visible
+                running: _root.visible && _alertComponent.closeTime > 0
                 interval: _alertComponent.closeTime
 
                 onTriggered: {
