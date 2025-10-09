@@ -12,6 +12,8 @@ import MMaterial.Media as Media
 T.ComboBox {
 	id: root
 
+	readonly property bool isValid: _textField.acceptableInput
+
 	property int delegateCount: 5
 	property int type: Inputs.TextField.Type.Outlined
 	property UI.PaletteBasic accent: UI.Theme.primary

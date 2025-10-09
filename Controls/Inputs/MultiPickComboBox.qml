@@ -11,16 +11,39 @@ Inputs.ComboBox {
 	property bool showCloseButtons: true
 	property UI.PaletteBasic chipAccent: root.accent
 
+	signal toggleElement(index : int)
+
+	function append(name) : void {
+		checkedElements.append({"name": name})
+	}
+
 	implicitHeight: Math.max(UI.Size.scale * 48, implicitContentHeight)
 
 	popup.closePolicy: Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
 	showPlaceholder: checkedElements.count === 0 && !root.focus
 	checkable: true
 
+	Keys.onSpacePressed: checkedElements.toggleByName(root.textAt(root.highlightedIndex))
 
 	delegate: Controls.MenuItem {
+		id: menuItemRoot
+
 		required property int index
 		required property var model
+
+		function loadCheckedState() {
+			if (checkedElements.count === 0)
+				return
+
+			for (let index = 0; index < checkedElements.count; index++) {
+				if (checkedElements.get(index).name === text) {
+					menuItemRoot.checked = true
+					return
+				}
+			}
+
+			menuItemRoot.checked = false
+		}
 
 		checkable: root.checkable
 		implicitHeight: root.delegateHeight
@@ -33,9 +56,11 @@ Inputs.ComboBox {
 
 		text: model[root.textRole]
 
-		onCheckedChanged: {
+		Component.onCompleted: menuItemRoot.loadCheckedState()
+
+		onToggled: {
 			if (checked)
-				checkedElements.append({"name": text})
+				root.append(text)
 			else {
 				checkedElements.removeByName(text)
 			}
@@ -44,10 +69,8 @@ Inputs.ComboBox {
 		Connections {
 			target: checkedElements
 
-			function onFieldRemoved(name) {
-				if (name === text) {
-					checked = false
-				}
+			function onCountChanged() {
+				menuItemRoot.loadCheckedState()
 			}
 		}
 	}
@@ -67,7 +90,7 @@ Inputs.ComboBox {
 
 			anchors {
 				fill: contentRoot
-				topMargin: UI.Size.pixel12
+				topMargin: root.type == Controls.TextField.Type.Outlined ? UI.Size.pixel12 : UI.Size.pixel20
 				margins: UI.Size.pixel14
 				leftMargin: 0
 				rightMargin: 0
@@ -116,17 +139,41 @@ Inputs.ComboBox {
 	ListModel {
 		id: checkedElements
 
-		signal fieldRemoved(name : string)
-
-		function removeByName(name) {
+		function toggleByName(name : string) {
 			for (let i = 0; i < count; i++) {
-				if (get(i).name === name) {
+				if (checkedElements.get(i).name === name) {
 					remove(i);
-					checkedElements.fieldRemoved(name)
+					return;
+				}
+			}
+			root.append(name);
+		}
+
+		function removeByName(name : string) {
+			for (let i = 0; i < count; i++) {
+				if (checkedElements.get(i).name === name) {
+					remove(i);
 					return;
 				}
 			}
 		}
+
+		function loadDisplayText() {
+			if (count === 0) {
+				root.displayText = "";
+				return;
+			}
+
+			let allNames = []
+			for (let i = 0; i < count; i++) {
+				allNames.push(checkedElements.get(i).name)
+			}
+
+			root.displayText = allNames.join(", ");
+		}
+
+		onCountChanged: loadDisplayText()
+		Component.onCompleted: loadDisplayText()
 	}
 
 	QtObject {

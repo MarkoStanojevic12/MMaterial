@@ -83,7 +83,10 @@ T.MenuItem {
 		checked: control.checked
 		customCheckImplementation: true
 
-		onClicked: control.checked = !control.checked
+        onClicked: {
+            control.checked = !control.checked
+            control.toggled()
+        }
     }
 
 	arrow: Media.Icon {
@@ -115,6 +118,7 @@ T.MenuItem {
 
 		onClicked: {
 			control.checked = !control.checked
+            control.toggled()
 		}
 	}
 }

@@ -50,7 +50,7 @@ Item {
 		anchors.fill: _root
 
 		enabled: visible
-		visible: _root.interactive
+        visible: _root.interactive
 		hoverEnabled: _root.hoverable
         cursorShape: containsMouse && _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
 
