@@ -23,7 +23,20 @@ Inputs.ComboBox {
 	showPlaceholder: checkedElements.count === 0 && !root.focus
 	checkable: true
 
-	Keys.onSpacePressed: checkedElements.toggleByName(root.textAt(root.highlightedIndex))
+	Keys.onSpacePressed: {
+		if (!root.popup.opened) {
+			root.popup.open();
+			return;
+		}
+
+		if (root.highlightedIndex < 0)
+			return;
+
+		const selectedText = root.textAt(root.highlightedIndex)
+
+		if (selectedText !== "")
+			checkedElements.toggleByName(selectedText)
+	}
 
 	delegate: Controls.MenuItem {
 		id: menuItemRoot
