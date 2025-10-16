@@ -42,6 +42,7 @@ list(APPEND UI_QML_FILES
     DashedLine.qml
     Pre.qml
     Teardrop.qml
+    ThemeSettings.qml
 )
 
 set_source_files_properties(

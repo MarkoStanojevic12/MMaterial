@@ -25,20 +25,20 @@ T.ToolTip {
     contentItem: Text {
         text: control.text
         wrapMode: Text.Wrap
-		color: UI.Theme.background.main
+        color: UI.Theme.settings.tooltip.textColor
         font {
-            pixelSize: UI.Size.pixel14
-            family: UI.Font.normal
+            pixelSize: UI.Theme.settings.tooltip.font.pixelSize
+            family: UI.Theme.settings.tooltip.font.family
         }
     }
 
     background: Rectangle {
-        radius: UI.Size.pixel10
-		color: UI.Theme.text.primary
+        radius: UI.Theme.settings.tooltip.radius
+        color: UI.Theme.settings.tooltip.backgroundColor
 
         border {
-            width: 1
-            color: UI.Theme.other.outline
+            width: UI.Theme.settings.tooltip.borderWidth
+            color: UI.Theme.settings.tooltip.borderColor
         }
     }
 
