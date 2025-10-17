@@ -45,6 +45,8 @@ RowLayout {
             to: 0
             duration: 800
         }
+
+        onFinished: _innerBar.anchors.leftMargin = 0
     }
 
     Rectangle {
