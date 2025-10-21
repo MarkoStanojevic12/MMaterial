@@ -8,7 +8,8 @@ import MMaterial.Media as Media
 T.MenuItem {
     id: control
 
-    property color color: control.highlighted ? UI.Theme.text.primary : UI.Theme.text.secondary
+    property UI.ThemeBase theme: UI.Theme.currentTheme
+    property color color: control.highlighted ? control.theme.text.primary : control.theme.text.secondary
 	property Media.IconData iconData: null
 	property bool useIcons: false
 
@@ -79,6 +80,7 @@ T.MenuItem {
 		x: control.mirrored ? control.leftPadding : control.width - width - control.horizontalPadding * 2
 		y: control.topPadding + (control.availableHeight - height) / 2
 
+        theme: control.theme
 		visible: control.checkable
 		checked: control.checked
 		customCheckImplementation: true
@@ -105,7 +107,7 @@ T.MenuItem {
 		width: control.width - UI.Size.pixel8
         height: control.height - 2
         radius: UI.Size.pixel6
-		color: control.down ? UI.Theme.action.selected : control.highlighted || checkableMA.containsMouse ? UI.Theme.action.hover : "transparent"
+        color: control.down ? control.theme.action.selected : control.highlighted || checkableMA.containsMouse ? control.theme.action.hover : "transparent"
     }
 
 	MouseArea {

@@ -11,7 +11,8 @@ T.TextField {
 	property alias rightIcon: _rightIcon
 
 	property real horizontalMargins: UI.Size.pixel12
-	property UI.PaletteBasic accent: UI.Theme.primary
+	property UI.PaletteBasic accent: root.theme.primary
+	property UI.ThemeBase theme: UI.Theme.currentTheme
 
 	property bool showPlaceholder: !root.activeFocus && root.text === ""
 	property int type: TextField.Type.Standard
@@ -24,9 +25,9 @@ T.TextField {
 
 	verticalAlignment: Qt.AlignVCenter
 	selectByMouse: true
-	selectedTextColor: acceptableInput ? root.accent.contrastText : UI.Theme.error.contrastText
-	selectionColor: acceptableInput ? root.accent.main : UI.Theme.error.main
-	placeholderTextColor: UI.Theme.text.primary
+	selectedTextColor: acceptableInput ? root.accent.contrastText : root.theme.error.contrastText
+	selectionColor: acceptableInput ? root.accent.main : root.theme.error.main
+	placeholderTextColor: root.theme.text.primary
 
 	leftPadding: (d.isStandardType ? 0 : d.horizontalPadding) + (leftIcon.visible ? leftIcon.width + UI.Size.pixel8 : 0)
 	rightPadding: d.horizontalPadding + (rightIcon.visible ? rightIcon.width + UI.Size.pixel8 : 0)
@@ -63,7 +64,7 @@ T.TextField {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
-			color: UI.Theme.text.disabled.toString()
+			color: root.theme.text.disabled.toString()
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3
 		}
@@ -76,7 +77,7 @@ T.TextField {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
-			color: UI.Theme.action.active.toString()
+			color: root.theme.action.active.toString()
 			visible: iconData
 			interactive: true
 			size: !visible ? 0 : bg.height * 0.3
@@ -86,6 +87,7 @@ T.TextField {
 	background: InputsBackground {
 		id: bg
 
+		theme: root.theme
 		rootItem: root
 		showPlaceholder: root.showPlaceholder
 		leftIcon: _leftIcon

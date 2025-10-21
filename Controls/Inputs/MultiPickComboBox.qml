@@ -8,6 +8,8 @@ import MMaterial.Controls.Inputs as Inputs
 Inputs.ComboBox {
 	id: root
 
+	readonly property int selectedItemsCount: checkedElements.count
+
 	property bool showCloseButtons: true
 	property UI.PaletteBasic chipAccent: root.accent
 
@@ -58,6 +60,7 @@ Inputs.ComboBox {
 			menuItemRoot.checked = false
 		}
 
+		theme: root.theme
 		checkable: root.checkable
 		implicitHeight: root.delegateHeight
 		horizontalPadding: UI.Size.pixel12
@@ -65,7 +68,7 @@ Inputs.ComboBox {
 		useIcons: false
 		highlighted: root.highlightedIndex === index
 		hoverEnabled: root.hoverEnabled
-		color: highlighted || root.currentIndex === index ? UI.Theme.text.primary : UI.Theme.text.secondary
+		color: highlighted || root.currentIndex === index ? root.theme.text.primary : root.theme.text.secondary
 
 		text: model[root.textRole]
 
