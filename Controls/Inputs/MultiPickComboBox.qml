@@ -9,6 +9,7 @@ Inputs.ComboBox {
 	id: root
 
 	readonly property int selectedItemsCount: checkedElements.count
+	readonly property list<string> selectedItems: selectedItemsCount > 1 ? root.displayText.split(",").map(item => item.trim()) : checkedElements.count > 0 ? [checkedElements.get(0).name] : []
 
 	property bool showCloseButtons: true
 	property UI.PaletteBasic chipAccent: root.accent
