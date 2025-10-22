@@ -9,14 +9,16 @@ T.TextField {
 
 	property alias leftIcon: _leftIcon
 	property alias rightIcon: _rightIcon
+	property alias ignoreDisabledColoring: bg.ignoreDisabledColoring
+
+	property UI.ThemeBase theme: UI.Theme.currentTheme
+	property UI.PaletteBasic accent: root.theme.primary
+	property UI.PaletteBasic errorAccent: root.theme.error
 
 	property real horizontalMargins: UI.Size.pixel12
-	property UI.PaletteBasic accent: root.theme.primary
-	property UI.ThemeBase theme: UI.Theme.currentTheme
-
 	property bool showPlaceholder: !root.activeFocus && root.text === ""
 	property int type: TextField.Type.Standard
-	property alias ignoreDisabledColoring: bg.ignoreDisabledColoring
+	property bool forceErrorState: false
 
 	enum Type { Filled, Outlined, Standard }
 
@@ -25,8 +27,8 @@ T.TextField {
 
 	verticalAlignment: Qt.AlignVCenter
 	selectByMouse: true
-	selectedTextColor: acceptableInput ? root.accent.contrastText : root.theme.error.contrastText
-	selectionColor: acceptableInput ? root.accent.main : root.theme.error.main
+	selectedTextColor: acceptableInput ? root.accent.contrastText : root.errorAccent.contrastText
+	selectionColor: acceptableInput ? root.accent.main : root.errorAccent.main
 	placeholderTextColor: root.theme.text.primary
 
 	leftPadding: (d.isStandardType ? 0 : d.horizontalPadding) + (leftIcon.visible ? leftIcon.width + UI.Size.pixel8 : 0)
@@ -92,5 +94,7 @@ T.TextField {
 		showPlaceholder: root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
+		errorAccent: root.errorAccent
+		acceptableInput: root.acceptableInput && !root.forceErrorState
 	}
 }

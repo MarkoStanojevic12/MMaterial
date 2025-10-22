@@ -12,6 +12,8 @@ Rectangle {
 	required property Item iconContainer
 
 	property UI.ThemeBase theme: UI.Theme.currentTheme
+	property UI.PaletteBasic errorAccent: root.theme.error
+
 	property bool ignoreDisabledColoring: false
 	property bool showPlaceholder: true
 	property bool acceptableInput: rootItem.acceptableInput
@@ -34,8 +36,8 @@ Rectangle {
 		State {
 			name: "error-filled"
 			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: root.theme.error.transparent.p8; border { color: root.theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.error.main }
+			PropertyChanges { target: root; color: root.errorAccent.transparent.p8; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused-filled"
@@ -66,8 +68,8 @@ Rectangle {
 		State {
 			name: "error-outlined"
 			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.error.main }
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused-outlined"
@@ -98,8 +100,8 @@ Rectangle {
 		State {
 			name: "error"
 			when: !root.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: "transparent"; border { color: root.theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.error.main }
+			PropertyChanges { target: root; color: "transparent"; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused"

@@ -18,12 +18,14 @@ T.ComboBox {
 	property int type: Inputs.TextField.Type.Outlined
 	property UI.ThemeBase theme: UI.Theme.currentTheme
 	property UI.PaletteBasic accent: root.theme.primary
+	property UI.PaletteBasic errorAccent: root.theme.error
 	property Media.IconData iconData: null
 	property string placeholderText: qsTr("Placeholder")
 	property color placeholderTextColor: root.theme.text.primary
 	property real delegateHeight: UI.Size.pixel46
 	property bool checkable: false
 	property var showPlaceholder: null
+	property bool forceErrorState: false
 
 	property alias color: _textField.color
 
@@ -80,7 +82,8 @@ T.ComboBox {
 		showPlaceholder: root.showPlaceholder === null ? (!root.focus && root.currentText === "" && !root.down && root.placeholderText !== "") : root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
-		acceptableInput: _textField.acceptableInput
+		errorAccent: root.errorAccent
+		acceptableInput: _textField.acceptableInput && !root.forceErrorState
 	}
 
 	contentItem: T.TextField {
@@ -100,8 +103,8 @@ T.ComboBox {
 		implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
 
 		color: root.theme.text.primary.toString()
-		selectedTextColor: acceptableInput ? root.accent.contrastText : root.theme.error.contrastText
-		selectionColor: acceptableInput ? root.accent.main : root.theme.error.main
+		selectedTextColor: acceptableInput ? root.accent.contrastText : root.errorAccent.contrastText
+		selectionColor: acceptableInput ? root.accent.main : root.errorAccent.main
 		placeholderTextColor: root.theme.text.primary.toString()
 
 		topPadding: root.type === Inputs.TextField.Type.Standard || root.type === Inputs.TextField.Type.Filled ? root.height * 0.3 : 0
