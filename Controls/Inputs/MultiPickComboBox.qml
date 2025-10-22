@@ -104,8 +104,6 @@ Inputs.ComboBox {
 	contentItem: Item {
 		id: contentRoot
 
-		property real padding: UI.Size.pixel6
-
 		implicitHeight: flow.implicitHeight + UI.Size.pixel24
 		clip: true
 
@@ -207,8 +205,6 @@ Inputs.ComboBox {
 
 	QtObject {
 		id: d
-
-		readonly property real horizontalPadding: root.height / 4
 
 		property list<string> checkedElements: []
 	}

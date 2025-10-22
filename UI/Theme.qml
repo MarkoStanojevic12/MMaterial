@@ -37,24 +37,30 @@ UI.ThemeBase{
     }
 
     function createAccent(color : string) : UI.PaletteBasic {
-        const isDark = root.currentTheme == UI.DarkTheme;
-        const light  = isDark ? Qt.lighter(color, 1.2) : Qt.darker(color, 1.2);
-        const dark   = isDark ? Qt.darker(color, 1.2)  : Qt.lighter(color, 1.2);
-        const lighter = isDark ? Qt.lighter(color, 1.4) : Qt.darker(color, 1.4);
-        const darker  = isDark ? Qt.darker(color, 1.4)  : Qt.lighter(color, 1.4);
+        if (color === "")
+            return null;
 
-        return Qt.createQmlObject(`
-            import MMaterial.UI as UI
-            UI.PaletteBasic {
-                main: ${JSON.stringify(color)}
-                contrastText: "#FFFFFF"
-                light: ${JSON.stringify(light)}
-                dark: ${JSON.stringify(dark)}
-                lighter: ${JSON.stringify(lighter)}
-                darker: ${JSON.stringify(darker)}
-            }
-        `, root);
+        var isDark = root.currentTheme == UI.DarkTheme;
+        var light  = isDark ? Qt.lighter(color, 1.2) : Qt.darker(color, 1.2);
+        var dark   = isDark ? Qt.darker(color, 1.2)  : Qt.lighter(color, 1.2);
+        var lighter = isDark ? Qt.lighter(color, 1.4) : Qt.darker(color, 1.4);
+        var darker  = isDark ? Qt.darker(color, 1.4)  : Qt.lighter(color, 1.4);
+        var contrastText = isDark ? "#FFFFFF" : "#000000";
+
+        var qml =
+            'import MMaterial.UI 1.0 as UI\n' +
+            'UI.PaletteBasic {\n' +
+            '    main: "' + color + '"\n' +
+            '    contrastText: "' + contrastText + '"\n' +
+            '    light: "' + light + '"\n' +
+            '    dark: "' + dark + '"\n' +
+            '    lighter: "' + lighter + '"\n' +
+            '    darker: "' + darker + '"\n' +
+            '}\n';
+
+        return Qt.createQmlObject(qml, root);
     }
+
 
     primary: currentTheme?.primary ?? null
     secondary: currentTheme?.secondary ?? null

@@ -28,6 +28,7 @@ T.ComboBox {
 	property bool forceErrorState: false
 
 	property alias color: _textField.color
+	property alias leftIcon: _leftIcon
 
 	implicitHeight: 48 * UI.Size.scale
 	implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
@@ -66,6 +67,7 @@ T.ComboBox {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
+			interactive: true
 			iconData: root.iconData
 			color: root.theme.text.disabled.toString()
 			visible: iconData

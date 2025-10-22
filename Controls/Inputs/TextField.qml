@@ -27,8 +27,8 @@ T.TextField {
 
 	verticalAlignment: Qt.AlignVCenter
 	selectByMouse: true
-	selectedTextColor: acceptableInput ? root.accent.contrastText : root.errorAccent.contrastText
-	selectionColor: acceptableInput ? root.accent.main : root.errorAccent.main
+	selectedTextColor: acceptableInput && !root.forceErrorState ? root.accent.contrastText : root.errorAccent.contrastText
+	selectionColor: acceptableInput && !root.forceErrorState ? root.accent.main : root.errorAccent.main
 	placeholderTextColor: root.theme.text.primary
 
 	leftPadding: (d.isStandardType ? 0 : d.horizontalPadding) + (leftIcon.visible ? leftIcon.width + UI.Size.pixel8 : 0)
@@ -43,7 +43,7 @@ T.TextField {
 	QtObject{
 		id: d
 
-		readonly property real horizontalPadding: root.height / 4
+		readonly property real horizontalPadding: UI.Size.pixel12
 
 		property bool isOutlinedType: root.type == TextField.Type.Outlined
 		property bool isFilledType: root.type == TextField.Type.Filled
@@ -67,6 +67,7 @@ T.TextField {
 			}
 
 			color: root.theme.text.disabled.toString()
+			interactive: true
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3
 		}
@@ -75,7 +76,7 @@ T.TextField {
 			id: _rightIcon
 
 			anchors {
-				right: _mainContainer.right; rightMargin: UI.Size.pixel12;
+				right: _mainContainer.right; rightMargin: d.horizontalPadding
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
