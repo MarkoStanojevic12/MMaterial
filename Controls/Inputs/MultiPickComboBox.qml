@@ -15,9 +15,15 @@ Inputs.ComboBox {
 	property UI.PaletteBasic chipAccent: root.accent
 
 	signal toggleElement(index : int)
+	signal selectedItemsEdited() // Emmited when manual change has been made
 
 	function append(name) : void {
 		checkedElements.append({"name": name})
+	}
+
+	function clear() : void {
+		checkedElements.clear()
+		root.displayText = ""
 	}
 
 	implicitHeight: Math.max(UI.Size.scale * 48, implicitContentHeight)
@@ -76,11 +82,14 @@ Inputs.ComboBox {
 		Component.onCompleted: menuItemRoot.loadCheckedState()
 
 		onToggled: {
-			if (checked)
+			if (checked) {
 				root.append(text)
+				root.selectedItemsEdited()
+			}
 			else {
 				checkedElements.removeByName(text)
 			}
+
 		}
 
 		Connections {
@@ -144,7 +153,9 @@ Inputs.ComboBox {
 
 					xButton {
 						visible: root.showCloseButtons
-						onClicked: checkedElements.removeByName(name)
+						onClicked: {
+							checkedElements.removeByName(name)
+						}
 					}
 				}
 			}
@@ -170,6 +181,7 @@ Inputs.ComboBox {
 			for (let i = 0; i < count; i++) {
 				if (checkedElements.get(i).name === name) {
 					remove(i);
+					root.selectedItemsEdited()
 					return;
 				}
 			}
