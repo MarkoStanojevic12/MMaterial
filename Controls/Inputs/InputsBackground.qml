@@ -146,7 +146,7 @@ Rectangle {
 
 		scale: _label.scale
 
-		height: root.border.width * 2
+		height: 4
 		width: _label.width
 		visible: _label.text !== "" && root.rootItem.type === TextField.Outlined
 		color: root.color
@@ -154,6 +154,7 @@ Rectangle {
 
 		anchors {
 			top: root.top
+			topMargin: -0.5
 			left: _label.left
 			right: _label.right
 			leftMargin: -UI.Size.pixel4
@@ -167,7 +168,7 @@ Rectangle {
 		verticalAlignment: Qt.AlignVCenter
 		horizontalAlignment: root.type === Inputs.TextField.Type.Outlined ? Qt.AlignHCenter : Qt.AlignLeft
 
-		width: Math.min(implicitWidth + UI.Size.pixel8, root.rootItem.width)
+		width: Math.min(implicitWidth + UI.Size.pixel8, root.rootItem.width - (_label.x * 2))
 		height: implicitHeight
 
 		font.pixelSize: root.rootItem.font.pixelSize
