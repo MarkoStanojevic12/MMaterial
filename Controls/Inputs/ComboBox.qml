@@ -30,6 +30,33 @@ T.ComboBox {
 	property alias color: _textField.color
 	property alias leftIcon: _leftIcon
 
+	function findByRole(role, value) {
+		if (!root.model)
+			return -1;
+
+		const model = root.model;
+
+		// Case 1: Model is a QAbstractListModel (C++ model or ListModel)
+		if (typeof model.get === "function") {
+			for (let j = 0; j < root.count; ++j) {
+				const item = model.get(j);
+				if (item && item[role] === value)
+					return j;
+			}
+			return -1;
+		}
+
+		// Case 2: Model is a plain JS array
+		for (let i = 0; i < model.length; ++i) {
+			const item = model[i];
+			if (item && item[role] === value)
+				return i;
+		}
+		return -1;
+
+	}
+
+
 	implicitHeight: 48 * UI.Size.scale
 	implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
 	down: _contextMenu.opened
