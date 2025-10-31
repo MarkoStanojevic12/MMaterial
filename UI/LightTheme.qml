@@ -90,4 +90,13 @@ UI.ThemeBase{
         p800: "#1C252E"
         p900: "#141A21"
     }
+
+    passive: UI.PaletteBasic{
+        darker: root.main.transparent.p32
+        dark: root.main.transparent.p16
+        main: Qt.darker(root.main.p200, 1.02)
+        light: root.main.transparent.p16
+        lighter: root.main.transparent.p32
+        contrastText: root.text.primary
+    }
 }
