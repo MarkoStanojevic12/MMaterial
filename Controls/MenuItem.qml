@@ -10,6 +10,7 @@ T.MenuItem {
 
     property UI.ThemeBase theme: UI.Theme.currentTheme
     property color color: control.highlighted ? control.theme.text.primary : control.theme.text.secondary
+    property string iconColor: Qt.color(control.color)
 	property Media.IconData iconData: null
 	property bool useIcons: false
 
@@ -26,7 +27,7 @@ T.MenuItem {
     icon {
         height: UI.Size.pixel22
         width: UI.Size.pixel22
-        color: control.color
+        color: control.iconColor
     }
 
     font {
@@ -56,7 +57,7 @@ T.MenuItem {
                 size: control.icon.height
                 iconData: control.iconData
 				visible: control.useIcons
-				color: Qt.color(control.color)
+                color: control.iconColor
             }
 
 			UI.B2 {
