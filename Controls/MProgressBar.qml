@@ -74,7 +74,7 @@ RowLayout {
             color: _root.foregroundColor
             radius: _bar.radius
 
-            Behavior on width { SmoothedAnimation { duration: 50;} }
+            Behavior on width { enabled: !_root.indeterminate; SmoothedAnimation { duration: 50;} }
         }
     }
 
@@ -88,7 +88,5 @@ RowLayout {
 		color: UI.Theme.text.secondary
         text: _root.progress + "%"
         verticalAlignment: Qt.AlignVCenter
-
-        onContentWidthChanged: font.pixelSize * 2.6
     }
 }
