@@ -74,8 +74,8 @@ Item {
                 NumberAnimation {
                     target: root
                     property: "opacity"
-                    duration: 650
-                    easing.type: Easing.InQuart
+                    duration: 550
+                    easing.type: Easing.InQuad
                 }
 
 				UI.EasedAnimation {
