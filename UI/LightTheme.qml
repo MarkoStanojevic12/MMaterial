@@ -92,11 +92,11 @@ UI.ThemeBase{
     }
 
     passive: UI.PaletteBasic{
-        darker: root.main.transparent.p32
-        dark: root.main.transparent.p16
-        main: Qt.darker(root.main.p200, 1.02)
-        light: root.main.transparent.p16
-        lighter: root.main.transparent.p32
-        contrastText: root.text.primary
+        darker: root.main.p900
+        dark: root.main.p700
+        main: root.main.p600
+        light: root.main.p300
+        lighter: root.main.p200
+        contrastText: root.background.main
     }
 }

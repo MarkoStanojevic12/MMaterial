@@ -21,7 +21,7 @@ T.SpinBox {
 	rightPadding: control.mirrored ? (down.indicator ? down.indicator.width : 0) : (up.indicator ? up.indicator.width : 0)
 
 	font {
-		family: UI.Font.normalFamilyFamily
+		family: UI.Font.normal
 		variableAxes: { "wght": 600 }
 		bold: true
 		pixelSize: UI.Size.pixel14

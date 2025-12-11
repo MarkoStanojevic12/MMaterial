@@ -66,7 +66,7 @@ T.TextField {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
-			color: root.theme.text.disabled.toString()
+			color: root.theme.action.active.toString()
 			interactive: true
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3

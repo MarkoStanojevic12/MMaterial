@@ -96,7 +96,7 @@ T.ComboBox {
 
 			interactive: true
 			iconData: root.iconData
-			color: root.theme.text.disabled.toString()
+			color: root.theme.action.active.toString()
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3
 		}
