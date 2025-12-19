@@ -15,7 +15,6 @@ Item {
 
         anchors.fill: _root
 
-        z: 9
         hoverEnabled: _root.enabled
         cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
 
