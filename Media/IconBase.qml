@@ -12,8 +12,8 @@ Item {
 
     property string color: ""
     property bool interactive: false
-    property bool hoverable: true
-	property bool containsMouse: mouseArea.containsMouse
+    property bool hoverable: false
+    property bool containsMouse: hoverHandler.hovered
 
     signal clicked
 
@@ -22,7 +22,7 @@ Item {
 
     states: [
         State {
-			when: mouseArea.pressed && _root.interactive
+            when: tapHandler.pressed && _root.interactive
             name: "pressed"
             PropertyChanges { target: _root; scale: 0.8; }
         },
@@ -44,16 +44,19 @@ Item {
         }
     ]
 
-	MouseArea {
-		id: mouseArea
+    TapHandler {
+        id: tapHandler
 
-		anchors.fill: _root
-
-		enabled: visible
-        visible: _root.interactive || _root.hoverable
-		hoverEnabled: _root.hoverable
+        enabled: _root.interactive
         cursorShape: containsMouse && _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
 
-		onClicked: if(_root.interactive){ _root.clicked(); }
+        onTapped: if(_root.interactive){ _root.clicked(); }
 	}
+
+    HoverHandler {
+        id: hoverHandler
+
+        enabled: _root.hoverable
+        cursorShape: containsMouse && _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
+    }
 }
