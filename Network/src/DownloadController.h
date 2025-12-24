@@ -80,44 +80,38 @@ private:
 
 class DownloadModel : public QAbstractListModel
 {
-	Q_OBJECT
-	QML_ELEMENT
+    Q_OBJECT
+    QML_ELEMENT
 
-	Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
+    Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
 public:
-	explicit DownloadModel(QObject *parent = nullptr);
+    explicit DownloadModel(QObject *parent = nullptr);
 
-	enum Roles {
-		UrlRole = Qt::UserRole + 1,
-		FileNameRole,
-		FileFullNameRole,
-		ProgressRole,
-		StatusRole,
-		TotalSizeRole,
-		DownloadedSizeRole
-	};
+    enum Roles { UrlRole = Qt::UserRole + 1, FileNameRole, FileFullNameRole, ProgressRole, StatusRole, TotalSizeRole, DownloadedSizeRole };
 
-	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-	bool setData(const QModelIndex& index, const QVariant& value, int role) override;
-	QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QHash<int, QByteArray> roleNames() const override;
 
-	bool isRunning() const;
+    bool isRunning() const;
 
-	Q_INVOKABLE void addDownload(const QUrl &url);
-	Q_INVOKABLE void startDownload(int index);
-	Q_INVOKABLE void pauseDownload(int index);
-	Q_INVOKABLE void removeDownload(int index);
-	Q_INVOKABLE void pauseRunning();
+    Q_INVOKABLE Download *addDownload(const QUrl &url);
+    Q_INVOKABLE Download *addDownload(const QUrl &url, const QString &location);
+
+    Q_INVOKABLE void startDownload(int index);
+    Q_INVOKABLE void pauseDownload(int index);
+    Q_INVOKABLE void removeDownload(int index);
+    Q_INVOKABLE void pauseRunning();
 
 private slots:
-	void onDownloadUpdated();
-	void onDownloadError(QNetworkReply::NetworkError error, const QString& errorString);
+    void onDownloadUpdated();
+    void onDownloadError(QNetworkReply::NetworkError error, const QString &errorString);
 
 private:
-	QList<Download*> m_downloads;
+    QList<Download *> m_downloads;
 
 signals:
-	void error(const QString& errorString);
-	void isRunningChanged();
+    void error(const QString &errorString);
+    void isRunningChanged();
 };

@@ -141,8 +141,6 @@ Rectangle {
             text: ""
             accent: _root.accent
             visible: text != ""
-
-            onClicked: _root.close()
         }
 
 		Media.Icon {

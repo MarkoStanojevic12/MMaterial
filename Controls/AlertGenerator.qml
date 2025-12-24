@@ -61,14 +61,20 @@ Popup {
 
             dismissButton {
                 text: item && item.dismissButton && item.dismissButton.text ? item.dismissButton.text : dismissButton.text
-                onClicked: item && item.dismissButton && item.dismissButton.onClicked ? item.dismissButton.onClicked() : function(){
+                onClicked: {
+                    if (item && item.dismissButton && item.dismissButton.onClicked)
+                        item.dismissButton.onClicked()
                     _alertComponent.close();
                 }
             }
 
             actionButton {
                 text: item && item.actionButton && item.actionButton.text && item.actionButton.text ? item.actionButton.text : actionButton.text
-                onClicked: item && item.actionButton && item.actionButton.onClicked ? item.actionButton.onClicked() : null
+                onClicked: {
+                    if (item && item.actionButton && item.actionButton.onClicked)
+                        item.actionButton.onClicked();
+                    _alertComponent.close();
+                }
             }
 
             onClose: listModel.remove(index)

@@ -13,7 +13,7 @@ Dialogs.Dialog {
 
 	property bool pauseOnClosed: false
 
-	property alias downloadModel: downloadModel
+	property Network.DownloadModel downloadModel: Network.DownloadModel {}
 
 	closePolicy: Dialogs.Dialog.NoAutoClose
 	implicitWidth: 350 * UI.Size.scale
@@ -54,9 +54,7 @@ Dialogs.Dialog {
 				UI.EasedAnimation { properties: "x, y, scale, opacity, height"; duration: 150; }
 			}
 
-			model: Network.DownloadModel {
-				id: downloadModel
-			}
+			model: root.downloadModel
 
 			delegate: Rectangle {
 				id: delRoot

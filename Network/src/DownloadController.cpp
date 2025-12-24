@@ -174,7 +174,8 @@ void Download::onFinished()
 {
 	if (m_reply->error() == QNetworkReply::NoError) {
 		setStatus(Status::Finished);
-	} else if (m_status != Status::Paused) {
+        emit finished();
+    } else if (m_status != Status::Paused) {
 		qDebug() << "Download finished with errors:" << m_reply->errorString();
 		onErrorFinished(m_reply->error(), m_reply->errorString());
 	}
@@ -308,22 +309,29 @@ bool DownloadModel::isRunning() const
 	return false;
 }
 
-void DownloadModel::addDownload(const QUrl& url)
+Download *DownloadModel::addDownload(const QUrl &url)
 {
-	auto* download = new Download(url);
-	beginInsertRows(QModelIndex(), m_downloads.size(), m_downloads.size());
-	m_downloads.append(download);
-	endInsertRows();
+    return addDownload(url, QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
+}
 
-	connect(download, &Download::progressMade, this, &DownloadModel::onDownloadUpdated);
-	connect(download, &Download::finished, this, &DownloadModel::onDownloadUpdated);
-	connect(download, &Download::statusChanged, this, &DownloadModel::onDownloadUpdated);
-	connect(download, &Download::statusChanged, this, &DownloadModel::isRunningChanged);
-	connect(download, SIGNAL(error(QNetworkReply::NetworkError,QString)), this, SLOT(onDownloadUpdated()));
+Download *DownloadModel::addDownload(const QUrl &url, const QString &location)
+{
+    auto *download = new Download(url, this, location);
+    beginInsertRows(QModelIndex(), m_downloads.size(), m_downloads.size());
+    m_downloads.append(download);
+    endInsertRows();
 
-	connect(download, &Download::error, this, &DownloadModel::onDownloadError);
+    connect(download, &Download::progressMade, this, &DownloadModel::onDownloadUpdated);
+    connect(download, &Download::finished, this, &DownloadModel::onDownloadUpdated);
+    connect(download, &Download::statusChanged, this, &DownloadModel::onDownloadUpdated);
+    connect(download, &Download::statusChanged, this, &DownloadModel::isRunningChanged);
+    connect(download, SIGNAL(error(QNetworkReply::NetworkError, QString)), this, SLOT(onDownloadUpdated()));
 
-	emit isRunningChanged();
+    connect(download, &Download::error, this, &DownloadModel::onDownloadError);
+
+    emit isRunningChanged();
+
+    return download;
 }
 
 void DownloadModel::startDownload(int index)
