@@ -151,6 +151,7 @@ Dialogs.Dialog {
 					size: UI.Size.pixel12
 					interactive: true
 					enabled: !removeAnimation.running
+					visible: !root.modal
 
 					anchors {
 						right: delRoot.right
@@ -270,6 +271,7 @@ Dialogs.Dialog {
 		Layout.fillWidth: true
 		accent: downloadModel.isRunning ? UI.Theme.error : UI.Theme.defaultNeutral
 		text: qsTr("Close")
+		visible: !root.modal
 		onClicked: root.close()
 
 	}
