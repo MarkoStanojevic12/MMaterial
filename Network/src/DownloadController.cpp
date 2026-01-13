@@ -1,312 +1,463 @@
 #include "DownloadController.h"
 
+#include <QFileInfo>
+#include <QLocale>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QStandardPaths>
 
 Download::Download(const QUrl &url, QObject *parent, const QString &location)
-	: QObject(parent), m_url(url), m_location(location)
+    : QObject(parent)
+    , m_url(url)
+    , m_location(location)
 {
 #if defined(__wasm__)
-	m_location = "";
+    m_location = "";
 #endif
 
-	start();
+    m_stallTimer.setSingleShot(true);
+    m_stallTimer.setInterval(kStallTimeoutMs);
+    connect(&m_stallTimer, &QTimer::timeout, this, &Download::onStallTimeout);
+
+    m_retryTimer.setSingleShot(true);
+    m_retryTimer.setInterval(kRetryIntervalMs);
+    connect(&m_retryTimer, &QTimer::timeout, this, &Download::onRetryTimeout);
+
+    start();
 }
 
 Download::~Download()
 {
-	if (m_reply)
-	{
-		m_reply->abort();
-	}
+    stopRetry();
+    disarmStallWatchdog();
+
+    if (m_reply)
+        m_reply->abort();
 }
 
 QString Download::folderName() const
 {
-	return {};
+    return {};
 }
 
 QString Download::fileName() const
 {
-	return m_fileName;
+    return m_fileName;
 }
 
 QString Download::fileFullName() const
 {
-	return m_fileFullName;
+    return m_fileFullName;
 }
 
 QUrl Download::url() const
 {
-	return m_url;
+    return m_url;
 }
 
 qint64 Download::bytesDownloaded() const
 {
-	return m_bytesDownloaded;
+    return m_bytesDownloaded;
 }
 
 qint64 Download::totalBytes() const
 {
-	return m_totalBytes;
+    return m_totalBytes;
 }
 
 int Download::progress() const
 {
-	if (m_totalBytes <= 0) {
-		return 0;
-	}
+    if (m_totalBytes <= 0)
+        return 0;
 
-	auto percentage = static_cast<double>(m_bytesDownloaded) / static_cast<double>(m_totalBytes) * 100;
-	return std::min(100, static_cast<int>(std::round(percentage)));
+    auto percentage = static_cast<double>(m_bytesDownloaded) / static_cast<double>(m_totalBytes) * 100;
+    return std::min(100, static_cast<int>(std::round(percentage)));
+}
+
+void Download::resetRetryState()
+{
+    m_retryAttempts = 0;
+    stopRetry();
+}
+
+bool Download::canRetry() const
+{
+    return m_retryAttempts < kMaxRetryAttempts;
+}
+
+void Download::scheduleRetry(const QString &reasonForLog)
+{
+    if (m_status == Status::Paused || m_status == Status::Finished)
+        return;
+
+    if (!canRetry()) {
+        if (!reasonForLog.isEmpty())
+            qWarning() << "Download retry limit reached for" << m_url << "-" << reasonForLog;
+        else
+            qWarning() << "Download retry limit reached for" << m_url;
+
+        setStatus(Status::Error);
+        stopRetry();
+        return;
+    }
+
+    disarmStallWatchdog();
+
+    ++m_retryAttempts;
+    setStatus(Status::Retrying);
+
+    if (!reasonForLog.isEmpty())
+        qWarning() << "Download error/stall, scheduling retry" << m_retryAttempts << "/" << kMaxRetryAttempts << "in" << (kRetryIntervalMs / 1000) << "s:" << reasonForLog;
+
+    m_retryTimer.start();
+}
+
+void Download::stopRetry()
+{
+    if (m_retryTimer.isActive())
+        m_retryTimer.stop();
+}
+
+void Download::armStallWatchdog()
+{
+    if (m_status == Status::Downloading || m_status == Status::Retrying)
+        m_stallTimer.start();
+}
+
+void Download::disarmStallWatchdog()
+{
+    if (m_stallTimer.isActive())
+        m_stallTimer.stop();
 }
 
 void Download::start()
 {
-	QNetworkRequest request(m_url);
+    resetRetryState();
 
-	// Check if resuming is possible
-	if (m_bytesDownloaded > 0 && (m_status == Status::Paused || m_status == Status::Error))
-	{
-		if (m_file) {
-			m_file->flush();
-			m_bytesDownloadedInitial = m_file->size();
-		}
-		QByteArray rangeHeaderValue = "bytes=" + QByteArray::number(m_bytesDownloadedInitial) + "-";
-		request.setRawHeader("Range",rangeHeaderValue);
-	}
+    if (m_reply) {
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
 
-	// Open the file for appending (if not already opened)
-	if (!m_file) {
-		QFileInfo fileInfo(m_url.fileName());
-		QString baseName = fileInfo.baseName();
-		QString extension = fileInfo.completeSuffix();
+    QNetworkRequest request(m_url);
 
-		// Construct the initial full file name
-		m_fileFullName = QString("%1/%2.%3").arg(m_location, baseName, extension);
-		m_fileName = m_url.fileName();
+    if (m_bytesDownloaded > 0 && (m_status == Status::Paused || m_status == Status::Error)) {
+        if (m_file) {
+            m_file->flush();
+            m_bytesDownloadedInitial = m_file->size();
+        }
+        QByteArray rangeHeaderValue = "bytes=" + QByteArray::number(m_bytesDownloadedInitial) + "-";
+        request.setRawHeader("Range", rangeHeaderValue);
+    }
 
-		if (QFile::exists(m_fileFullName)) {
-			int i = 1;
+    if (!m_file) {
+        QFileInfo fileInfo(m_url.fileName());
+        QString baseName = fileInfo.baseName();
+        QString extension = fileInfo.completeSuffix();
 
-			// Iterate until a unique name is found
-			while (QFile::exists(m_fileFullName)) {
-				m_fileFullName = QString("%1/%2(%3).%4").arg(m_location, baseName, QString::number(i), extension);
-				m_fileName = QString("%1(%2).%3").arg(baseName, QString::number(i), extension);
-				i++;
-			}
-		}
+        m_fileFullName = QString("%1/%2.%3").arg(m_location, baseName, extension);
+        m_fileName = m_url.fileName();
 
-		m_file = new QFile(m_fileFullName, this);
+        if (QFile::exists(m_fileFullName)) {
+            int i = 1;
 
-		if (!m_file->open(QIODevice::WriteOnly | QIODevice::Append)) {
-			qWarning() << "Failed to open file:" << m_fileFullName;
-			setStatus(Status::Error);
-			return;
-		}
+            while (QFile::exists(m_fileFullName)) {
+                m_fileFullName = QString("%1/%2(%3).%4").arg(m_location, baseName, QString::number(i), extension);
+                m_fileName = QString("%1(%2).%3").arg(baseName, QString::number(i), extension);
+                i++;
+            }
+        }
 
-		m_bytesDownloaded = m_file->size();
-	}
+        m_file = new QFile(m_fileFullName, this);
 
-	m_reply = m_networkManager.get(request);
-	setStatus(m_status == Status::Error ? Status::Retrying : Status::Downloading);
+        if (!m_file->open(QIODevice::WriteOnly | QIODevice::Append)) {
+            qWarning() << "Failed to open file:" << m_fileFullName;
+            setStatus(Status::Error);
+            scheduleRetry(QStringLiteral("Failed to open local file"));
+            return;
+        }
 
-	connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::onProgressMade);
-	connect(m_reply, &QNetworkReply::finished, this, &Download::onFinished);
-	connect(m_reply, &QNetworkReply::errorOccurred, this, &Download::onError);
-	connect(m_reply, &QNetworkReply::readyRead, this, &Download::onReadyRead);
+        m_bytesDownloaded = m_file->size();
+    }
+
+    m_reply = m_networkManager.get(request);
+    setStatus(Status::Downloading);
+
+    connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::onProgressMade);
+    connect(m_reply, &QNetworkReply::finished, this, &Download::onFinished);
+    connect(m_reply, &QNetworkReply::errorOccurred, this, &Download::onError);
+    connect(m_reply, &QNetworkReply::readyRead, this, &Download::onReadyRead);
+
+    armStallWatchdog();
 }
 
 void Download::onReadyRead()
 {
-	if (m_file && m_reply) {
-		QByteArray data = m_reply->readAll();
-		m_file->write(data);
-	}
+    if (m_status == Status::Paused)
+        return;
+
+    if (m_file && m_reply) {
+        QByteArray data = m_reply->readAll();
+        if (!data.isEmpty()) {
+            m_file->write(data);
+            armStallWatchdog();
+        }
+    }
 }
 
 void Download::pause()
 {
-	setStatus(Status::Paused);
-	if (m_reply)
-	{
-		m_reply->abort(); // Cancel the current download
-		m_reply = nullptr;
-	}
-}
+    setStatus(Status::Paused);
+    stopRetry();
+    disarmStallWatchdog();
 
+    if (m_reply) {
+        m_reply->abort();
+        m_reply = nullptr;
+    }
+}
 
 QString Download::bytesToHumanReadable(qint64 bytes)
 {
-	const char* units[] = {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
-	const int unitCount = sizeof(units) / sizeof(units[0]);
-	double size = static_cast<double>(bytes);
-	int unitIndex = 0;
+    const char *units[] = {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+    const int unitCount = sizeof(units) / sizeof(units[0]);
+    double size = static_cast<double>(bytes);
+    int unitIndex = 0;
 
-	// Determine the appropriate unit
-	while (size >= 1024.0 && unitIndex < unitCount - 1) {
-		size /= 1024.0;
-		++unitIndex;
-	}
+    while (size >= 1024.0 && unitIndex < unitCount - 1) {
+        size /= 1024.0;
+        ++unitIndex;
+    }
 
-	// Format the result with locale-aware number formatting
-	QLocale locale;
-	QString formattedSize = locale.toString(size, 'f', 2); // Two decimal places
-	return QString("%1 %2").arg(formattedSize, units[unitIndex]);
-
+    QLocale locale;
+    QString formattedSize = locale.toString(size, 'f', 2);
+    return QString("%1 %2").arg(formattedSize, units[unitIndex]);
 }
 
 void Download::onProgressMade(qint64 bytesReceived, qint64 bytesTotal)
 {
-	if (m_status == Status::Paused || bytesReceived == 0)
-		return;
+    if (m_status == Status::Paused || bytesReceived == 0)
+        return;
 
-	if (m_totalBytes == 0)
-		m_totalBytes = bytesTotal;
+    armStallWatchdog();
 
-	m_bytesDownloaded = bytesReceived + m_bytesDownloadedInitial;
-	setStatus(Status::Downloading);
+    if (m_totalBytes == 0)
+        m_totalBytes = bytesTotal;
 
-	emit progressMade(m_bytesDownloaded, m_totalBytes);
+    m_bytesDownloaded = bytesReceived + m_bytesDownloadedInitial;
+    setStatus(Status::Downloading);
+
+    emit progressMade(m_bytesDownloaded, m_totalBytes);
+}
+
+void Download::onStallTimeout()
+{
+    if (m_status == Status::Paused || m_status == Status::Finished)
+        return;
+
+    if (m_reply) {
+        qWarning() << "Download stalled, aborting:" << m_url;
+        m_reply->abort();
+    } else {
+        setStatus(Status::Error);
+        scheduleRetry(QStringLiteral("Stall timeout without active reply"));
+    }
+}
+
+void Download::onRetryTimeout()
+{
+    if (m_status == Status::Paused || m_status == Status::Finished)
+        return;
+
+    if (!canRetry()) {
+        setStatus(Status::Error);
+        stopRetry();
+        return;
+    }
+
+    QNetworkRequest request(m_url);
+
+    if (m_file) {
+        m_file->flush();
+        m_bytesDownloadedInitial = m_file->size();
+        if (m_bytesDownloadedInitial > 0) {
+            QByteArray rangeHeaderValue = "bytes=" + QByteArray::number(m_bytesDownloadedInitial) + "-";
+            request.setRawHeader("Range", rangeHeaderValue);
+        }
+    }
+
+    if (m_reply) {
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
+
+    m_reply = m_networkManager.get(request);
+    setStatus(Status::Downloading);
+
+    connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::onProgressMade);
+    connect(m_reply, &QNetworkReply::finished, this, &Download::onFinished);
+    connect(m_reply, &QNetworkReply::errorOccurred, this, &Download::onError);
+    connect(m_reply, &QNetworkReply::readyRead, this, &Download::onReadyRead);
+
+    armStallWatchdog();
 }
 
 void Download::onFinished()
 {
-	if (m_reply->error() == QNetworkReply::NoError) {
-		setStatus(Status::Finished);
+    disarmStallWatchdog();
+
+    if (!m_reply)
+        return;
+
+    if (m_reply->error() == QNetworkReply::NoError) {
+        setStatus(Status::Finished);
+        resetRetryState();
         emit finished();
     } else if (m_status != Status::Paused) {
-		qDebug() << "Download finished with errors:" << m_reply->errorString();
-		onErrorFinished(m_reply->error(), m_reply->errorString());
-	}
-	if (m_status != Status::Paused && m_status != Status::Error) {
-		if (m_file) {
-			m_file->close();
-			delete m_file;
-			m_file = nullptr;
-		}
-	}
+        qDebug() << "Download finished with errors:" << m_reply->errorString();
+        onErrorFinished(m_reply->error(), m_reply->errorString());
+    }
 
-	m_reply->deleteLater();
-	m_reply = nullptr;
+    if (m_status == Status::Finished) {
+        if (m_file) {
+            m_file->close();
+            delete m_file;
+            m_file = nullptr;
+        }
+    }
+
+    m_reply->deleteLater();
+    m_reply = nullptr;
 }
 
 void Download::onError(QNetworkReply::NetworkError errorCode)
 {
-	Q_UNUSED(errorCode);
-	if (m_status != Status::Paused)
-		setStatus(Status::Error);
+    Q_UNUSED(errorCode);
+
+    if (m_status == Status::Paused)
+        return;
+
+    setStatus(Status::Error);
+    // scheduleRetry happens in onErrorFinished where we have the message,
+    // but if Qt only calls onError (rare), still schedule a retry.
+    scheduleRetry(QStringLiteral("Network error"));
 }
 
-void Download::onErrorFinished(QNetworkReply::NetworkError errorCode, const QString& errorString)
+void Download::onErrorFinished(QNetworkReply::NetworkError errorCode, const QString &errorString)
 {
-	onError(errorCode);
-	emit error(errorCode, errorString);
+    Q_UNUSED(errorCode);
+
+    if (m_status == Status::Paused)
+        return;
+
+    setStatus(Status::Error);
+    emit error(errorCode, errorString);
+    scheduleRetry(errorString);
 }
 
 Download::Status Download::status() const
 {
-	return m_status;
+    return m_status;
 }
 
 void Download::setStatus(Status newStatus)
 {
-	if (m_status == newStatus)
-		return;
-	m_status = newStatus;
-	emit statusChanged();
+    if (m_status == newStatus)
+        return;
+    m_status = newStatus;
+    emit statusChanged();
 }
 
 QString Download::totalSize()
 {
-	if (m_totalBytes == 0)
-		return tr("N/A");
-	return bytesToHumanReadable(m_totalBytes);
+    if (m_totalBytes == 0)
+        return tr("N/A");
+    return bytesToHumanReadable(m_totalBytes);
 }
 
 QString Download::downloadedSize()
 {
-	return bytesToHumanReadable(m_bytesDownloaded);
+    return bytesToHumanReadable(m_bytesDownloaded);
 }
 
+// -------------------- DownloadModel --------------------
+
 DownloadModel::DownloadModel(QObject *parent)
-	: QAbstractListModel(parent)
-{
-}
+    : QAbstractListModel(parent)
+{}
 
 int DownloadModel::rowCount(const QModelIndex &parent) const
 {
-	if (parent.isValid())
-		return 0;
-	return m_downloads.size();
+    if (parent.isValid())
+        return 0;
+    return m_downloads.size();
 }
 
 QVariant DownloadModel::data(const QModelIndex &index, int role) const
 {
-	if (!index.isValid() || index.row() >= m_downloads.size())
-		return QVariant();
+    if (!index.isValid() || index.row() >= m_downloads.size())
+        return QVariant();
 
-	Download *download = m_downloads.at(index.row());
+    Download *download = m_downloads.at(index.row());
 
-	switch (role)
-	{
-		case UrlRole:
-			return download->url().toString();
-		case FileNameRole:
-			return download->fileName();
-		case FileFullNameRole:
-			return download->fileFullName();
-		case ProgressRole:
-			return download->progress();
-		case StatusRole:
-			return download->status();
-		case TotalSizeRole:
-			return download->totalSize();
-		case DownloadedSizeRole:
-			return download->downloadedSize();
-		default:
-			return QVariant();
-	}
+    switch (role) {
+    case UrlRole:
+        return download->url().toString();
+    case FileNameRole:
+        return download->fileName();
+    case FileFullNameRole:
+        return download->fileFullName();
+    case ProgressRole:
+        return download->progress();
+    case StatusRole:
+        return download->status();
+    case TotalSizeRole:
+        return download->totalSize();
+    case DownloadedSizeRole:
+        return download->downloadedSize();
+    default:
+        return QVariant();
+    }
 }
 
-bool DownloadModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool DownloadModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-	if (!index.isValid() || index.row() >= m_downloads.size())
-		return false;
+    if (!index.isValid() || index.row() >= m_downloads.size())
+        return false;
 
-	Download *download = m_downloads.at(index.row());
+    Download *download = m_downloads.at(index.row());
 
-	switch (role){
-		case StatusRole:
-			download->setStatus(static_cast<Download::Status>(value.toInt()));
-			break;
-		default:
-			return false;
-	}
+    switch (role) {
+    case StatusRole:
+        download->setStatus(static_cast<Download::Status>(value.toInt()));
+        break;
+    default:
+        return false;
+    }
 
-	emit dataChanged(index, index, { role });
-	return true;
+    emit dataChanged(index, index, {role});
+    return true;
 }
 
 QHash<int, QByteArray> DownloadModel::roleNames() const
 {
-	return {
-		{ UrlRole, "url" },
-		{ FileNameRole, "fileName" },
-		{ FileFullNameRole, "fileFullName" },
-		{ ProgressRole, "progress" },
-		{ StatusRole, "status" },
-		{ TotalSizeRole, "fileSize" },
-		{ DownloadedSizeRole, "fileDownloadedSize"}
-	};
+    return {{UrlRole, "url"},
+            {FileNameRole, "fileName"},
+            {FileFullNameRole, "fileFullName"},
+            {ProgressRole, "progress"},
+            {StatusRole, "status"},
+            {TotalSizeRole, "fileSize"},
+            {DownloadedSizeRole, "fileDownloadedSize"}};
 }
 
 bool DownloadModel::isRunning() const
 {
-	for (auto* download : m_downloads)
-		if (download->status() == Download::Downloading)
-			return true;
-	return false;
+    for (auto *download : m_downloads)
+        if (download->status() == Download::Downloading)
+            return true;
+    return false;
 }
 
 Download *DownloadModel::addDownload(const QUrl &url)
@@ -336,61 +487,58 @@ Download *DownloadModel::addDownload(const QUrl &url, const QString &location)
 
 void DownloadModel::startDownload(int index)
 {
-	if (index < 0 || index >= m_downloads.size())
-		return;
+    if (index < 0 || index >= m_downloads.size())
+        return;
 
-	m_downloads.at(index)->start();
+    m_downloads.at(index)->start();
 }
 
 void DownloadModel::pauseDownload(int index)
 {
-	if (index < 0 || index >= m_downloads.size())
-		return;
+    if (index < 0 || index >= m_downloads.size())
+        return;
 
-	m_downloads.at(index)->pause();
+    m_downloads.at(index)->pause();
 }
 
 void DownloadModel::removeDownload(int index)
 {
-	if (index < 0 || index >= m_downloads.size())
-		return;
+    if (index < 0 || index >= m_downloads.size())
+        return;
 
-	beginRemoveRows(QModelIndex(), index, index);
+    beginRemoveRows(QModelIndex(), index, index);
 
-	auto* download = m_downloads.takeAt(index);
-	download->deleteLater();
-	endRemoveRows();
+    auto *download = m_downloads.takeAt(index);
+    download->deleteLater();
+    endRemoveRows();
 }
 
 void DownloadModel::pauseRunning()
 {
-	for (auto* download : m_downloads) {
-		if (download->status() == Download::Downloading || download->status() == Download::Retrying)
-			download->pause();
-	}
+    for (auto *download : m_downloads) {
+        if (download->status() == Download::Downloading || download->status() == Download::Retrying)
+            download->pause();
+    }
 }
 
 void DownloadModel::onDownloadUpdated()
 {
-	// Update the corresponding row in the view
-	Download *download = dynamic_cast<Download *>(sender());
-	if (!download)
-		return;
+    Download *download = dynamic_cast<Download *>(sender());
+    if (!download)
+        return;
 
-	int row = m_downloads.indexOf(download);
-	if (row >= 0)
-	{
-		emit dataChanged(index(row), index(row));
-	}
+    int row = m_downloads.indexOf(download);
+    if (row >= 0)
+        emit dataChanged(index(row), index(row));
 }
 
-void DownloadModel::onDownloadError(QNetworkReply::NetworkError errorCode, const QString& errorString)
+void DownloadModel::onDownloadError(QNetworkReply::NetworkError errorCode, const QString &errorString)
 {
-	Q_UNUSED(errorCode);
+    Q_UNUSED(errorCode);
 
-	Download *download = dynamic_cast<Download *>(sender());
-	if (!download)
-		return;
+    Download *download = dynamic_cast<Download *>(sender());
+    if (!download)
+        return;
 
-	emit error(download->fileName() + tr(" failed. Reason: ") + errorString);
+    emit error(download->fileName() + tr(" failed. Reason: ") + errorString);
 }
