@@ -65,6 +65,7 @@ qt_add_qml_module(UILib
     STATIC
     OPTIONAL_IMPORTS
         MMaterial.UI.Animations
+        MMaterial.UI.Misc
     QML_FILES
         ${QML_UI_SINGLETONS}
         ${UI_QML_FILES}
@@ -79,3 +80,4 @@ target_link_libraries(UILib PRIVATE Qt6::Quick)
 target_compile_definitions(UILib PRIVATE QT_QUICKCONTROLS_MATERIAL_STYLE)
 
 add_subdirectory(Animations)
+add_subdirectory(Misc)
