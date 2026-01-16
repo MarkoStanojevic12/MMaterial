@@ -37,7 +37,7 @@ Item {
     readonly property real pixel54: 54 * scale
     readonly property real pixel64: 64 * scale
 
-    enum Grade { S, M, L, Custom }
+    enum Grade { XS, S, M, L, Custom }
 
     enum Format { Extended, Compact, Mobile }
 

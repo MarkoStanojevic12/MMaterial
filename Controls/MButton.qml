@@ -19,21 +19,27 @@ Rectangle {
 			return UI.Size.pixel15
 		if(_root.size == UI.Size.Grade.M)
 			return UI.Size.pixel14
-		return UI.Size.pixel13
+		if(_root.size == UI.Size.Grade.S)
+			return UI.Size.pixel13
+		return UI.Size.pixel12
 	}
 	property real horizontalPadding: {
 		if(_root.size == UI.Size.Grade.L)
 			return UI.Size.pixel22;
 		if(_root.size == UI.Size.Grade.M)
 			return UI.Size.pixel16;
-		return UI.Size.pixel10;
+		if(_root.size == UI.Size.Grade.S)
+			return UI.Size.pixel10;
+		return UI.Size.pixel8;
 	}
 	property real verticalPadding: {
 		if(_root.size == UI.Size.Grade.L)
 			return UI.Size.pixel12;
 		if(_root.size == UI.Size.Grade.M)
 			return UI.Size.pixel6;
-		return UI.Size.pixel4;
+		if(_root.size == UI.Size.Grade.S)
+			return UI.Size.pixel4;
+		return UI.Size.pixel2;
 	}
 
 	property bool isLoading: false
