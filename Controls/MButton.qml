@@ -139,11 +139,11 @@ Rectangle {
 	QtObject{
 		id: _private
 
-		property color backgroundColor: "#FFFFFF"
-		property color textColor: "#FFFFFF"
-		property color borderColor: "#FFFFFF"
+		property color backgroundColor: _root.enabled ? UI.Theme.text.primary : UI.Theme.action.disabledBackground
+		property color textColor: _root.enabled ? UI.Theme.background.main : UI.Theme.action.disabled
+		property color borderColor: "transparent"
 		property bool oneOrLessChildrenVisible: !_title.visible && (!_leftIcon.visible || !_rightIcon.visible)
-		property color containsMouseColor: "#FFFFFF"
+		property color containsMouseColor: UI.Theme.text.secondary
 	}
 
 	Behavior on implicitWidth {
@@ -207,6 +207,7 @@ Rectangle {
 			Layout.alignment: _title.visible ? Qt.AlignLeft : Qt.AlignCenter
 			size: _title.contentHeight * 0.8
 			visible: iconData && !_root.isLoading
+			color: _private.textColor
 		}
 
 		UI.H2{
@@ -235,6 +236,7 @@ Rectangle {
 
 			visible: iconData && !_root.isLoading
 			size: _title.contentHeight * 0.8
+			color: _private.textColor
 		}
 
 		BusyIndicator{

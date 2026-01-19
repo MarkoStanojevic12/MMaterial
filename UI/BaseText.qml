@@ -24,7 +24,7 @@ Text {
 	Controls.MToolTip {
         id: tooltip
 
-        visible: _hoverHandler.hovered && _root.truncated
+        visible: _hoverHandler.hovered && _root.showTooltip
         text: _root.tooltipText
         delay: 300
     }
