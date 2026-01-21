@@ -15,11 +15,6 @@ Item {
     height: Size.pixel12
     width: Size.pixel22
 
-    anchors {
-        centerIn: parent
-        verticalCenterOffset: -Size.pixel40
-    }
-
     NumberAnimation {
         target: d
         properties: "displayBatteryPercentage"

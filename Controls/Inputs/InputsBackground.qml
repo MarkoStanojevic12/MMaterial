@@ -16,7 +16,7 @@ Rectangle {
 
 	property bool ignoreDisabledColoring: false
 	property bool showPlaceholder: true
-	property bool acceptableInput: rootItem.acceptableInput
+	property bool acceptableInput: (rootItem && rootItem.acceptableInput !== undefined) ? rootItem.acceptableInput : true
 
 	radius: UI.Size.pixel8
 

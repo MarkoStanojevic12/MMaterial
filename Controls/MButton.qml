@@ -49,6 +49,7 @@ Rectangle {
 
 	property int type: MButton.Type.Contained
 	property int size: UI.Size.Grade.L
+	property real spacing: UI.Size.pixel8
 
 	property alias leftIcon: _leftIcon
 	property alias rightIcon: _rightIcon
@@ -199,7 +200,7 @@ Rectangle {
 
 		anchors.centerIn: _root
 
-		spacing: UI.Size.pixel8
+		spacing: _root.spacing
 
 		Media.Icon {
 			id: _leftIcon
