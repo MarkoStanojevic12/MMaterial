@@ -8,7 +8,7 @@ Item {
     property bool isCharging: false
     property color batteryColor: root.batteryPercentage > 50
                          ? Theme.success.main
-                         : root.batteryPercentage > 20
+                         : root.batteryPercentage > 15
                            ? Theme.warning.main
                            : Theme.error.main
 
