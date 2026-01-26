@@ -9,6 +9,7 @@ UI.ThemeBase{
 
 	property UI.ThemeBase currentTheme: UI.DarkTheme
 	property list<color> chartColors: [root.primary, root.secondary, root.info, root.success, root.warning, root.error]
+    property ThemeSettings settings: ThemeSettings {}
 
 	function setTheme(theme: UI.ThemeBase) : void {
         console.log("Theme switched to " + theme.objectName)
@@ -34,6 +35,32 @@ UI.ThemeBase{
                 return pattern.main;
         }
     }
+
+    function createAccent(color : string) : UI.PaletteBasic {
+        if (color === "")
+            return null;
+
+        var isDark = root.currentTheme == UI.DarkTheme;
+        var light  = isDark ? Qt.lighter(color, 1.2) : Qt.darker(color, 1.2);
+        var dark   = isDark ? Qt.darker(color, 1.2)  : Qt.lighter(color, 1.2);
+        var lighter = isDark ? Qt.lighter(color, 1.4) : Qt.darker(color, 1.4);
+        var darker  = isDark ? Qt.darker(color, 1.4)  : Qt.lighter(color, 1.4);
+        var contrastText = isDark ? "#FFFFFF" : "#000000";
+
+        var qml =
+            'import MMaterial.UI 1.0 as UI\n' +
+            'UI.PaletteBasic {\n' +
+            '    main: "' + color + '"\n' +
+            '    contrastText: "' + contrastText + '"\n' +
+            '    light: "' + light + '"\n' +
+            '    dark: "' + dark + '"\n' +
+            '    lighter: "' + lighter + '"\n' +
+            '    darker: "' + darker + '"\n' +
+            '}\n';
+
+        return Qt.createQmlObject(qml, root);
+    }
+
 
     primary: currentTheme?.primary ?? null
     secondary: currentTheme?.secondary ?? null

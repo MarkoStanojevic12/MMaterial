@@ -3,6 +3,7 @@ import QtQuick
 QtObject {
     required property color mainColor;
 
+    readonly property color p4: Qt.rgba(mainColor.r, mainColor.g, mainColor.b, 0.04)
     readonly property color p8: Qt.rgba(mainColor.r, mainColor.g, mainColor.b, 0.08)
     readonly property color p12: Qt.rgba(mainColor.r, mainColor.g, mainColor.b, 0.12)
     readonly property color p16: Qt.rgba(mainColor.r, mainColor.g, mainColor.b, 0.16)

@@ -9,13 +9,16 @@ T.TextField {
 
 	property alias leftIcon: _leftIcon
 	property alias rightIcon: _rightIcon
+	property alias ignoreDisabledColoring: bg.ignoreDisabledColoring
+
+	property UI.ThemeBase theme: UI.Theme.currentTheme
+	property UI.PaletteBasic accent: root.theme.primary
+	property UI.PaletteBasic errorAccent: root.theme.error
 
 	property real horizontalMargins: UI.Size.pixel12
-	property UI.PaletteBasic accent: UI.Theme.primary
-
 	property bool showPlaceholder: !root.activeFocus && root.text === ""
 	property int type: TextField.Type.Standard
-	property alias ignoreDisabledColoring: bg.ignoreDisabledColoring
+	property bool forceErrorState: false
 
 	enum Type { Filled, Outlined, Standard }
 
@@ -24,9 +27,9 @@ T.TextField {
 
 	verticalAlignment: Qt.AlignVCenter
 	selectByMouse: true
-	selectedTextColor: acceptableInput ? root.accent.contrastText : UI.Theme.error.contrastText
-	selectionColor: acceptableInput ? root.accent.main : UI.Theme.error.main
-	placeholderTextColor: UI.Theme.text.primary
+	selectedTextColor: acceptableInput && !root.forceErrorState ? root.accent.contrastText : root.errorAccent.contrastText
+	selectionColor: acceptableInput && !root.forceErrorState ? root.accent.main : root.errorAccent.main
+	placeholderTextColor: root.theme.text.primary
 
 	leftPadding: (d.isStandardType ? 0 : d.horizontalPadding) + (leftIcon.visible ? leftIcon.width + UI.Size.pixel8 : 0)
 	rightPadding: d.horizontalPadding + (rightIcon.visible ? rightIcon.width + UI.Size.pixel8 : 0)
@@ -36,10 +39,11 @@ T.TextField {
 		family: UI.Font.normal
 		pixelSize: UI.Size.pixel14
 	}
+
 	QtObject{
 		id: d
 
-		readonly property real horizontalPadding: root.height / 4
+		readonly property real horizontalPadding: UI.Size.pixel12
 
 		property bool isOutlinedType: root.type == TextField.Type.Outlined
 		property bool isFilledType: root.type == TextField.Type.Filled
@@ -62,7 +66,8 @@ T.TextField {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
-			color: UI.Theme.text.disabled.toString()
+			color: root.theme.action.active.toString()
+			interactive: true
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3
 		}
@@ -71,11 +76,11 @@ T.TextField {
 			id: _rightIcon
 
 			anchors {
-				right: _mainContainer.right; rightMargin: UI.Size.pixel12;
+				right: _mainContainer.right; rightMargin: d.horizontalPadding
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
-			color: UI.Theme.action.active.toString()
+			color: root.theme.action.active.toString()
 			visible: iconData
 			interactive: true
 			size: !visible ? 0 : bg.height * 0.3
@@ -85,9 +90,12 @@ T.TextField {
 	background: InputsBackground {
 		id: bg
 
+		theme: root.theme
 		rootItem: root
 		showPlaceholder: root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
+		errorAccent: root.errorAccent
+		acceptableInput: root.acceptableInput && !root.forceErrorState
 	}
 }

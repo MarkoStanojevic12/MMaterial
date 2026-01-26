@@ -8,7 +8,7 @@ import MMaterial.Media as Media
 Media.IconBase {
     id: _root
 
-    Image{
+    Image {
 		anchors.centerIn: _root
 		height: _root.size
 		width: _root.size
@@ -22,8 +22,8 @@ Media.IconBase {
             enabled: _root.color != ""
             effect: MultiEffect {
                 colorizationColor: _root.color
-                colorization: 1
-                brightness: 0.7
+                colorization: _root.iconData ? _root.iconData.colorization : 1
+                brightness: _root.iconData ? _root.iconData.brightness : 0.7
             }
         }
     }

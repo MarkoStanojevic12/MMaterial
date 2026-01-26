@@ -8,10 +8,11 @@ Rectangle {
     id: _root
 
     enum Severity { Info, Success, Warning, Error }
-    enum Variant { Standard, Filled, Outlined }
+    enum Variant { Standard, Filled, Outlined, Soft }
 
     property alias actionButton: _actionButton
     property alias dismissButton: _dismissButton
+    property alias closeIcon: _closeIcon
 
     property int severity: Alert.Severity.Info
     property int variant: Alert.Variant.Filled
@@ -62,9 +63,17 @@ Rectangle {
         State{
             name: "outlined"
             when: _root.variant == Alert.Variant.Outlined
-            PropertyChanges{ target: _root; color: UI.Theme.background.main; border.width: UI.Size.pixel1; border.color: accent.dark}
+            PropertyChanges{ target: _root; color: UI.Theme.background.main; border.width: UI.Size.pixel1; border.color: _root.accent.dark}
             PropertyChanges{ target: _icon; color: _root.accent.main}
             PropertyChanges{ target: _closeIcon; color: _root.accent.main}
+            PropertyChanges{ target: _text; color: _root.accent.dark}
+        },
+        State{
+            name: "soft"
+            when: _root.variant == Alert.Variant.Soft
+            PropertyChanges{ target: _root; color: _root.accent.transparent.p8; border.width: UI.Size.pixel1; border.color: _root.accent.dark}
+            PropertyChanges{ target: _icon; color: _root.accent.dark}
+            PropertyChanges{ target: _closeIcon; color: _root.accent.dark}
             PropertyChanges{ target: _text; color: _root.accent.dark}
         }
     ]
@@ -112,7 +121,7 @@ Rectangle {
 			color: UI.Theme.info.darker
             verticalAlignment: Qt.AlignVCenter
             elide: Text.ElideNone
-            wrapMode: Text.WordWrap
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             lineHeight: 1
         }
 
@@ -141,8 +150,6 @@ Rectangle {
             text: ""
             accent: _root.accent
             visible: text != ""
-
-            onClicked: _root.close()
         }
 
 		Media.Icon {

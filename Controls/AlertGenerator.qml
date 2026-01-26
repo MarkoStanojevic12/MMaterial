@@ -14,8 +14,11 @@ Popup {
     property int edgeOf: Item.TopLeft //TopRight, BottomLeft, BottomRight
     property int defaultVariant: Alert.Variant.Standard
 
-    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left ? 20 : Overlay.overlay.width - 20 - width
-    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top ? 20 : Overlay.overlay.height - 20 - height
+    property real horizontalMargin: UI.Size.pixel20
+    property real verticalMargin: UI.Size.pixel20
+
+    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left ? 20 : Overlay.overlay.width - horizontalMargin - width
+    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top ? 20 : Overlay.overlay.height - verticalMargin - height
 
     enter: null
 
@@ -46,26 +49,33 @@ Popup {
             id: _alertComponent
 
             required property int index
+            required property string alertText
+            required property var details
 
-            property var item: listModel.get(index)
-            property int closeTime: item ? item.closeTime : 0
+            required property int closeTime
 
             width: _contentRoot.width
 
-            text: item && item.text ? item.text : ""
-            severity: item && item.severity ? item.severity : severity
-            variant: item && item.variant ? item.variant : _root.defaultVariant
+                        text: _alertComponent.alertText
+                        severity: _alertComponent.details !== undefined && _alertComponent.details.severity !== undefined ? _alertComponent.details.severity : severity
+            variant: _alertComponent.details !== undefined && _alertComponent.details.variant !== undefined ? _alertComponent.details.variant : _root.defaultVariant
 
             dismissButton {
-                text: item && item.dismissButton && item.dismissButton.text ? item.dismissButton.text : dismissButton.text
-                onClicked: item && item.dismissButton && item.dismissButton.onClicked ? item.dismissButton.onClicked() : function(){
+                text: _alertComponent.details !== undefined && _alertComponent.details.dismissButton !== undefined && _alertComponent.details.dismissButton.text !== undefined ? _alertComponent.details.dismissButton.text : dismissButton.text
+                onClicked: {
+                    if (_alertComponent.details !== undefined && _alertComponent.details.dismissButton !== undefined && _alertComponent.details.dismissButton.onClicked !== undefined)
+                        _alertComponent.details.dismissButton.onClicked()
                     _alertComponent.close();
                 }
             }
 
             actionButton {
-                text: item && item.actionButton && item.actionButton.text && item.actionButton.text ? item.actionButton.text : actionButton.text
-                onClicked: item && item.actionButton && item.actionButton.onClicked ? item.actionButton.onClicked() : null
+                text: _alertComponent.details !== undefined && _alertComponent.details.actionButton !== undefined && _alertComponent.details.actionButton.text !== undefined ? _alertComponent.details.actionButton.text : actionButton.text
+                onClicked: {
+                    if (_alertComponent.details !== undefined && _alertComponent.details.actionButton !== undefined && _alertComponent.details.actionButton.onClicked !== undefined)
+                        _alertComponent.details.actionButton.onClicked();
+                    _alertComponent.close();
+                }
             }
 
             onClose: listModel.remove(index)
@@ -73,7 +83,7 @@ Popup {
             Timer {
                 id: _timer
 
-                running: _root.visible
+                running: _root.visible && _alertComponent.closeTime > 0
                 interval: _alertComponent.closeTime
 
                 onTriggered: {
@@ -110,20 +120,10 @@ Popup {
 				console.warn("No text added for alert!")
 
 			let alertObject = {
-				text : message,
-				closeTime : duration
+                alertText : message,
+                closeTime : duration,
+                details : details
 			};
-
-			if(details.severity)
-				alertObject.severity = details.severity;
-			if(details.icon)
-				alertObject.icon = details.icon;
-			if(details.variant)
-				alertObject.variant = details.variant;
-			if(details.dismissButton)
-				alertObject.dismissButton = details.dismissButton;
-			if(details.actionButton)
-				alertObject.actionButton = details.actionButton;
 
 			_contentRoot.model.append(alertObject);
 		}

@@ -16,7 +16,7 @@ Loader {
     property string color
 
     property bool interactive: false
-    property bool hoverable: true
+    property bool hoverable: false
 
     signal clicked
 

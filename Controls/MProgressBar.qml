@@ -12,6 +12,7 @@ RowLayout {
     property color foregroundColor: accent.main
     property color backgroundColor: accent.transparent.p24
     property bool showLabel: false
+    property bool indeterminate: false
     
     property alias barHeight: _bar.height
     property alias label: _label
@@ -20,6 +21,33 @@ RowLayout {
 
     implicitWidth: 300
 	implicitHeight: UI.Size.pixel10
+
+    SequentialAnimation {
+        id: indeterminateAnimation
+
+        running: _root.indeterminate
+        loops: Animation.Infinite
+
+        UI.EasedAnimation {
+            target: _innerBar
+            property: "anchors.leftMargin"
+
+            from: 0
+            to: _bar.width - _innerBar.width
+            duration: 800
+        }
+
+        UI.EasedAnimation {
+            target: _innerBar
+            property: "anchors.leftMargin"
+
+            from: _bar.width - _innerBar.width
+            to: 0
+            duration: 800
+        }
+
+        onFinished: _innerBar.anchors.leftMargin = 0
+    }
 
     Rectangle {
         id: _bar
@@ -30,6 +58,7 @@ RowLayout {
 
         color: _root.backgroundColor
         radius: 50
+        clip: true
 
         Rectangle {
             id: _innerBar
@@ -40,16 +69,16 @@ RowLayout {
                 bottom: _bar.bottom
             }
 
-            width: _root.progress * _bar.width / 100
+            width: _root.indeterminate ? _bar.width * 0.25 : _root.progress * _bar.width / 100
 
             color: _root.foregroundColor
             radius: _bar.radius
 
-            Behavior on width { SmoothedAnimation { duration: 50;} }
+            Behavior on width { enabled: !_root.indeterminate; SmoothedAnimation { duration: 50;} }
         }
     }
 
-	UI.Caption{
+    UI.Caption {
         id: _label
 
         Layout.preferredWidth: contentWidth
@@ -59,7 +88,5 @@ RowLayout {
 		color: UI.Theme.text.secondary
         text: _root.progress + "%"
         verticalAlignment: Qt.AlignVCenter
-
-        onContentWidthChanged: font.pixelSize * 2.6
     }
 }

@@ -17,7 +17,7 @@ T.MenuSeparator {
     contentItem: Rectangle {
         radius: UI.Size.pixel6
         implicitWidth: 188
-        implicitHeight: 1
+		implicitHeight: 0.5
 		color: UI.Theme.text.secondary
     }
 }

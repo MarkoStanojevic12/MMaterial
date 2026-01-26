@@ -29,11 +29,11 @@ QtObject{
     }
 
 	property UI.PaletteBasic passive: UI.PaletteBasic{
-        darker: root.main.transparent.p32
-        dark: root.main.transparent.p16
-        main: root.text.primary
-        light: root.main.transparent.p16
-        lighter: root.main.transparent.p32
+		darker: root.main.transparent.p32
+		dark: root.main.transparent.p16
+		main: root.main.p400
+		light: root.main.transparent.p16
+		lighter: root.main.transparent.p32
 		contrastText: root.text.primary
     }
 }

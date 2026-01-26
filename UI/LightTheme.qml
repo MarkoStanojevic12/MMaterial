@@ -54,9 +54,9 @@ UI.ThemeBase{
     }
 
 	text: UI.PaletteText{
-        primary: root.main.p800
-        secondary: root.main.p600
-        disabled: root.main.p500
+        primary: root.main.p700
+        secondary: root.main.p500
+        disabled: root.main.p400
     }
 
 	background: UI.PaletteBackground{
@@ -89,5 +89,14 @@ UI.ThemeBase{
         p700: "#454F5B"
         p800: "#1C252E"
         p900: "#141A21"
+    }
+
+    passive: UI.PaletteBasic{
+        darker: root.main.p900
+        dark: root.main.p700
+        main: root.main.p600
+        light: root.main.p300
+        lighter: root.main.p200
+        contrastText: root.background.main
     }
 }

@@ -26,6 +26,7 @@ qt_add_qml_module(InputsLib
         InputsBackground.qml
         TextArea.qml
         SegmentedField.qml
+        MultiPickComboBox.qml
     SOURCES
         ${INPUTS_SOURCES}
 )

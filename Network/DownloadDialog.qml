@@ -13,7 +13,7 @@ Dialogs.Dialog {
 
 	property bool pauseOnClosed: false
 
-	property alias downloadModel: downloadModel
+	property Network.DownloadModel downloadModel: Network.DownloadModel {}
 
 	closePolicy: Dialogs.Dialog.NoAutoClose
 	implicitWidth: 350 * UI.Size.scale
@@ -54,9 +54,7 @@ Dialogs.Dialog {
 				UI.EasedAnimation { properties: "x, y, scale, opacity, height"; duration: 150; }
 			}
 
-			model: Network.DownloadModel {
-				id: downloadModel
-			}
+			model: root.downloadModel
 
 			delegate: Rectangle {
 				id: delRoot
@@ -153,6 +151,7 @@ Dialogs.Dialog {
 					size: UI.Size.pixel12
 					interactive: true
 					enabled: !removeAnimation.running
+					visible: !root.modal
 
 					anchors {
 						right: delRoot.right
@@ -272,6 +271,7 @@ Dialogs.Dialog {
 		Layout.fillWidth: true
 		accent: downloadModel.isRunning ? UI.Theme.error : UI.Theme.defaultNeutral
 		text: qsTr("Close")
+		visible: !root.modal
 		onClicked: root.close()
 
 	}

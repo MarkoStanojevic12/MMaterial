@@ -8,9 +8,11 @@ import MMaterial.Media as Media
 T.MenuItem {
     id: control
 
-    property color color: control.highlighted ? UI.Theme.text.primary : UI.Theme.text.secondary
+    property UI.ThemeBase theme: UI.Theme.currentTheme
+    property color color: control.highlighted ? control.theme.text.primary : control.theme.text.secondary
+    property string iconColor: Qt.color(control.color)
 	property Media.IconData iconData: null
-	property bool useIcons: true
+	property bool useIcons: false
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
@@ -20,11 +22,12 @@ T.MenuItem {
 
     padding: UI.Size.pixel6
     spacing: UI.Size.pixel16
+	horizontalPadding: UI.Size.pixel8
 
     icon {
         height: UI.Size.pixel22
         width: UI.Size.pixel22
-        color: control.color
+        color: control.iconColor
     }
 
     font {
@@ -34,11 +37,6 @@ T.MenuItem {
 
     contentItem: Item {
         id: contentItemRoot
-
-        readonly property real arrowPadding: control.subMenu && control.arrow ? control.arrow.width + control.spacing : 0
-        readonly property real indicatorPadding: control.checkable && control.indicator ? control.indicator.width + control.spacing : 0
-
-        readonly property bool mirrored: control.mirrored
 
         opacity: control.enabled ? 1.0 : 0.48
 
@@ -52,11 +50,14 @@ T.MenuItem {
             }
 
 			Media.Icon {
+				id: contentIcon
+
+				Layout.leftMargin: UI.Size.pixel8
+
                 size: control.icon.height
                 iconData: control.iconData
 				visible: control.useIcons
-
-				color: Qt.color(control.color)
+                color: control.iconColor
             }
 
 			UI.B2 {
@@ -73,14 +74,22 @@ T.MenuItem {
         }
     }
 
-	indicator: Media.Icon {
-        x: control.mirrored ? control.leftPadding : control.width - width - control.padding * 2
-        y: control.topPadding + (control.availableHeight - height) / 2
+	indicator: MCheckbox {
+		implicitHeight: UI.Size.pixel20
+		implicitWidth: UI.Size.pixel20
 
-        visible: control.checked
-		iconData: control.checkable ? Media.Icons.light.check : null
-		color: Qt.color(control.color)
-		size: control.icon.height
+		x: control.mirrored ? control.leftPadding : control.width - width - control.horizontalPadding * 2
+		y: control.topPadding + (control.availableHeight - height) / 2
+
+        theme: control.theme
+		visible: control.checkable
+		checked: control.checked
+		customCheckImplementation: true
+
+        onClicked: {
+            control.checked = !control.checked
+            control.toggled()
+        }
     }
 
 	arrow: Media.Icon {
@@ -88,18 +97,31 @@ T.MenuItem {
         y: control.topPadding + (control.availableHeight - height) / 2
 
 		size: control.icon.height
-        visible: control.subMenu
+		visible: control.subMenu && !control.checkable
 		iconData: control.subMenu ? Media.Icons.light.chevronRight : null
 		color: Qt.color(control.color)
     }
 
     background: Rectangle {
-        implicitWidth: 420 * UI.Size.scale
         implicitHeight: UI.Size.pixel36
-        x: UI.Size.pixel8
-        width: control.width - UI.Size.pixel16
+		x: UI.Size.pixel4
+		width: control.width - UI.Size.pixel8
         height: control.height - 2
         radius: UI.Size.pixel6
-        color: control.down ? UI.Theme.action.selected : control.highlighted ? UI.Theme.action.hover : "transparent"
+        color: control.down ? control.theme.action.selected : control.highlighted || checkableMA.containsMouse ? control.theme.action.hover : "transparent"
     }
+
+	MouseArea {
+		id: checkableMA
+
+		anchors.fill: control
+		hoverEnabled: enabled
+		visible: control.checkable
+		enabled: control.enabled && control.checkable
+
+		onClicked: {
+			control.checked = !control.checked
+            control.toggled()
+		}
+	}
 }

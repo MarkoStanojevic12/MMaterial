@@ -4,9 +4,16 @@ import QtQuick
 import QtQuick.Templates as T
 
 import MMaterial.UI as UI
+import MMaterial.Media as Media
 
 T.Menu {
     id: control
+
+    property UI.ThemeBase theme: UI.Theme.currentTheme
+    property color color: control.highlighted ? control.theme.text.primary : control.theme.text.secondary
+    property string iconColor: Qt.color(control.color)
+    property Media.IconData iconData: null
+    property bool useIcons: false
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             contentWidth + leftPadding + rightPadding)
@@ -14,9 +21,23 @@ T.Menu {
                              contentHeight + topPadding + bottomPadding)
 
     margins: 0
-    overlap: 1
+	overlap: 1
 
-    delegate: MenuItem { height: UI.Size.pixel36 }
+    delegate: MenuItem {
+        id: menuDelegate
+
+        height: UI.Size.pixel36
+
+        Component.onCompleted: {
+            if (menuDelegate.subMenu) {
+                menuDelegate.iconData = menuDelegate.subMenu.iconData
+                menuDelegate.iconColor = menuDelegate.subMenu.iconColor
+                menuDelegate.useIcons = menuDelegate.subMenu.useIcons
+                menuDelegate.color = menuDelegate.subMenu.color
+                menuDelegate.theme = menuDelegate.subMenu.theme
+            }
+        }
+    }
 
     enter: Transition {
         NumberAnimation { property: "scale"; from: 0.9; to: 1.0; easing.type: Easing.OutQuint; duration: 220 }
@@ -31,10 +52,11 @@ T.Menu {
     contentItem: Item {
         id: contentItemRoot
 
-        implicitHeight: listView.implicitHeight + UI.Size.pixel16
+		implicitHeight: listView.implicitHeight + UI.Size.pixel8
 
         ListView {
             id: listView
+
             anchors.centerIn: contentItemRoot
             implicitHeight: contentHeight
             width: contentItemRoot.width
@@ -49,14 +71,14 @@ T.Menu {
     }
 
     background: Rectangle {
-        radius: UI.Size.pixel6
-        implicitWidth:  UI.Size.scale * 420
+		radius: UI.Size.pixel12
+        implicitWidth:  UI.Size.scale * 320
         implicitHeight: UI.Size.pixel36
 		color: UI.Theme.background.paper
 
         border {
 			color:  UI.Theme.other.divider
-            width: 1
+			width: 0.5
         }
     }
 

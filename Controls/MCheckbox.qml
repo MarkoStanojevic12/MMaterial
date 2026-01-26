@@ -6,7 +6,8 @@ import MMaterial.Media as Media
 Checkable {
     id: _root
 
-	property UI.PaletteBasic accent: UI.Theme.primary
+    property UI.ThemeBase theme: UI.Theme.currentTheme
+    property UI.PaletteBasic accent: _root.theme.primary
 
     implicitHeight: UI.Size.pixel24
     implicitWidth: UI.Size.pixel24
@@ -16,12 +17,12 @@ Checkable {
         State {
             name: "checked"
             when: _root.checked
-            PropertyChanges { target: _background; color: _root.enabled ? _root.accent.main : UI.Theme.action.disabled; border.width: 0; }
+            PropertyChanges { target: _background; color: _root.enabled ? _root.accent.main : _root.theme.action.disabled; border.width: 0; }
         },
         State {
             name: "unchecked"
             when: !_root.checked
-            PropertyChanges { target: _background; color: "transparent"; border { width: UI.Size.pixel1*2; color: _root.enabled ? UI.Theme.action.active : UI.Theme.action.disabled } }
+            PropertyChanges { target: _background; color: "transparent"; border { width: UI.Size.pixel1*2; color: _root.enabled ? _root.theme.action.active : _root.theme.action.disabled } }
         }
     ]
 
@@ -40,7 +41,7 @@ Checkable {
 
         size: _root.height * 0.8
         iconData: Media.Icons.light.check
-		color: UI.Theme.background.main.toString();
+        color: _root.theme.background.main.toString();
         visible: _root.checked
     }
 

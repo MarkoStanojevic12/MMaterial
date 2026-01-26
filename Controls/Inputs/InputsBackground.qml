@@ -11,14 +11,18 @@ Rectangle {
 	required property Media.Icon leftIcon
 	required property Item iconContainer
 
+	property UI.ThemeBase theme: UI.Theme.currentTheme
+	property UI.PaletteBasic errorAccent: root.theme.error
+
 	property bool ignoreDisabledColoring: false
 	property bool showPlaceholder: true
+	property bool acceptableInput: (rootItem && rootItem.acceptableInput !== undefined) ? rootItem.acceptableInput : true
 
 	radius: UI.Size.pixel8
 
 	border {
 		width: root.rootItem.type === TextField.Type.Outlined ? 1 : 0
-		color: UI.Theme.text.primary
+		color: root.theme.text.primary
 	}
 
 	states: [
@@ -26,96 +30,96 @@ Rectangle {
 		State {
 			name: "disabled-filled"
 			when: (!root.rootItem.enabled && !root.ignoreDisabledColoring) && root.rootItem.type == TextField.Type.Filled
-			PropertyChanges { target: root; color: UI.Theme.action.disabledBackground; border { color: UI.Theme.action.disabledBackground } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.disabled; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.action.disabledBackground; border { color: root.theme.action.disabledBackground } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.disabled; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "error-filled"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: UI.Theme.error.transparent.p8; border { color: UI.Theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
+			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Filled && !(root.rootItem instanceof Inputs.TextArea)
+			PropertyChanges { target: root; color: root.errorAccent.transparent.p8; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused-filled"
 			when: root.rootItem.focus && root.rootItem.type == TextField.Type.Filled
-			PropertyChanges { target: root; color: UI.Theme.main.transparent.p16; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.primary }
+			PropertyChanges { target: root; color: root.theme.main.transparent.p16; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.primary }
 		},
 		State {
 			name: "hovered-filled"
 			when: root.rootItem.hovered && root.rootItem.type == TextField.Type.Filled
-			PropertyChanges { target: root; color: UI.Theme.main.transparent.p16; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.main.transparent.p16; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "normal-filled"
 			when: root.rootItem.type == TextField.Type.Filled
-			PropertyChanges { target: root; color: UI.Theme.main.transparent.p8; border { color: UI.Theme.action.disabledBackground} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.main.transparent.p8; border { color: root.theme.action.disabledBackground} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		},
 
 		//Outlined
 		State {
 			name: "disabled-outlined"
 			when: (!root.rootItem.enabled && !root.ignoreDisabledColoring) && root.rootItem.type == TextField.Type.Outlined
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.action.disabledBackground } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.disabled; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.theme.action.disabledBackground } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.disabled; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "error-outlined"
-			when: !root.rootItem.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
+			when: !root.acceptableInput && root.rootItem.type == TextField.Type.Outlined && !(root.rootItem instanceof Inputs.TextArea)
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused-outlined"
 			when: root.rootItem.activeFocus && root.rootItem.type == TextField.Type.Outlined
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.primary }
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.primary }
 		},
 		State {
 			name: "hovered-outlined"
 			when: root.rootItem.hovered && root.rootItem.type == TextField.Type.Outlined
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "normal-outlined"
 			when: root.rootItem.type == TextField.Type.Outlined
-			PropertyChanges { target: root; color: UI.Theme.background.paper; border { color: UI.Theme.action.disabledBackground} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: root.theme.background.paper; border { color: root.theme.action.disabledBackground} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		},
 
 		//Standard
 		State {
 			name: "disabled"
 			when: (!root.rootItem.enabled && !root.ignoreDisabledColoring)
-			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.action.disabledBackground } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.disabled; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: "transparent"; border { color: root.theme.action.disabledBackground } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.disabled; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "error"
-			when: !root.rootItem.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
-			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.error.main } }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.error.main }
+			when: !root.acceptableInput && !(root.rootItem instanceof Inputs.TextArea)
+			PropertyChanges { target: root; color: "transparent"; border { color: root.errorAccent.main } }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.errorAccent.main }
 		},
 		State {
 			name: "focused"
 			when: root.rootItem.activeFocus
-			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.primary }
+			PropertyChanges { target: root; color: "transparent"; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.primary }
 		},
 		State {
 			name: "hovered"
 			when: root.rootItem.hovered
-			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.text.primary} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: "transparent"; border { color: root.theme.text.primary} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		},
 		State {
 			name: "normal"
 			when: true
-			PropertyChanges { target: root; color: "transparent"; border { color: UI.Theme.action.disabledBackground} }
-			PropertyChanges { target: root.rootItem; color: UI.Theme.text.primary; placeholderTextColor: UI.Theme.text.disabled }
+			PropertyChanges { target: root; color: "transparent"; border { color: root.theme.action.disabledBackground} }
+			PropertyChanges { target: root.rootItem; color: root.theme.text.primary; placeholderTextColor: root.theme.text.disabled }
 		}
 	]
 
@@ -142,7 +146,7 @@ Rectangle {
 
 		scale: _label.scale
 
-		height: root.border.width * 2
+		height: 4
 		width: _label.width
 		visible: _label.text !== "" && root.rootItem.type === TextField.Outlined
 		color: root.color
@@ -150,6 +154,7 @@ Rectangle {
 
 		anchors {
 			top: root.top
+			topMargin: -0.5
 			left: _label.left
 			right: _label.right
 			leftMargin: -UI.Size.pixel4
@@ -163,7 +168,7 @@ Rectangle {
 		verticalAlignment: Qt.AlignVCenter
 		horizontalAlignment: root.type === Inputs.TextField.Type.Outlined ? Qt.AlignHCenter : Qt.AlignLeft
 
-		width: Math.min(implicitWidth + UI.Size.pixel8, root.rootItem.width)
+		width: Math.min(implicitWidth + UI.Size.pixel8, root.rootItem.width - (_label.x * 2))
 		height: implicitHeight
 
 		font.pixelSize: root.rootItem.font.pixelSize
@@ -182,7 +187,7 @@ Rectangle {
 				PropertyChanges{
 					target: _label;
 					font.pixelSize: d.fontSize
-					opacity: root.rootItem.acceptableInput ? 1 : 0.62
+					opacity: root.acceptableInput ? 1 : 0.62
 					y: {
 						if (root.rootItem instanceof Inputs.TextArea) {
 							if (root.rootItem.type == Inputs.TextField.Filled)
@@ -194,7 +199,7 @@ Rectangle {
 					}
 
 					x: root.rootItem instanceof Inputs.ComboBox ?
-						0 :
+						root.rootItem.leftPadding :
 						root.rootItem instanceof Inputs.TextArea ? root.rootItem.leftPadding :
 						(root.rootItem.type === Inputs.TextField.Type.Standard ?
 							 (root.leftIcon.visible ? root.leftIcon.size / 2 + root.rootItem.leftPadding : 0) :

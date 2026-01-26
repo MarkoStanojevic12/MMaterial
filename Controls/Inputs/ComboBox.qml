@@ -12,13 +12,50 @@ import MMaterial.Media as Media
 T.ComboBox {
 	id: root
 
+	readonly property bool isValid: _textField.acceptableInput
+
 	property int delegateCount: 5
 	property int type: Inputs.TextField.Type.Outlined
-	property UI.PaletteBasic accent: UI.Theme.primary
+	property UI.ThemeBase theme: UI.Theme.currentTheme
+	property UI.PaletteBasic accent: root.theme.primary
+	property UI.PaletteBasic errorAccent: root.theme.error
 	property Media.IconData iconData: null
 	property string placeholderText: qsTr("Placeholder")
-	property color placeholderTextColor: UI.Theme.text.primary
+	property color placeholderTextColor: root.theme.text.primary
+	property real delegateHeight: UI.Size.pixel46
+	property bool checkable: false
+	property var showPlaceholder: null
+	property bool forceErrorState: false
+
 	property alias color: _textField.color
+	property alias leftIcon: _leftIcon
+
+	function findByRole(role, value) {
+		if (!root.model)
+			return -1;
+
+		const model = root.model;
+
+		// Case 1: Model is a QAbstractListModel (C++ model or ListModel)
+		if (typeof model.get === "function") {
+			for (let j = 0; j < root.count; ++j) {
+				const item = model.get(j);
+				if (item && item[role] === value)
+					return j;
+			}
+			return -1;
+		}
+
+		// Case 2: Model is a plain JS array
+		for (let i = 0; i < model.length; ++i) {
+			const item = model[i];
+			if (item && item[role] === value)
+				return i;
+		}
+		return -1;
+
+	}
+
 
 	implicitHeight: 48 * UI.Size.scale
 	implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
@@ -35,10 +72,10 @@ T.ComboBox {
 		pixelSize: UI.Size.pixel14
 	}
 
-	QtObject{
+	QtObject {
 		id: d
 
-		readonly property real horizontalPadding: root.height / 4
+		readonly property real horizontalPadding: UI.Size.pixel16
 	}
 
 	Item {
@@ -57,8 +94,9 @@ T.ComboBox {
 				verticalCenter: _mainContainer.verticalCenter
 			}
 
+			interactive: true
 			iconData: root.iconData
-			color: UI.Theme.text.disabled.toString()
+			color: root.theme.action.active.toString()
 			visible: iconData
 			size: !visible ? 0 : bg.height * 0.3
 		}
@@ -67,11 +105,14 @@ T.ComboBox {
 	background: Inputs.InputsBackground {
 		id: bg
 
+		theme: root.theme
 		rootItem: root
 		ignoreDisabledColoring: root.enabled
-		showPlaceholder: !root.focus && root.displayText === "" && !root.down && root.placeholderText !== ""
+		showPlaceholder: root.showPlaceholder === null ? (!root.focus && root.currentText === "" && !root.down && root.placeholderText !== "") : root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
+		errorAccent: root.errorAccent
+		acceptableInput: _textField.acceptableInput && !root.forceErrorState
 	}
 
 	contentItem: T.TextField {
@@ -80,7 +121,7 @@ T.ComboBox {
 		text: root.editable ? root.editText : root.displayText
 		placeholderText: ""
 		enabled: root.editable
-		autoScroll: root.editable
+		autoScroll: root.editable || root.checkable
 		readOnly: root.down
 		inputMethodHints: root.inputMethodHints
 		validator: root.validator
@@ -90,9 +131,10 @@ T.ComboBox {
 		implicitHeight: 52 * UI.Size.scale
 		implicitWidth: (UI.Size.format == UI.Size.Format.Extended ? 319 : 200) * UI.Size.scale
 
-		selectedTextColor: acceptableInput ? root.accent.contrastText : UI.Theme.error.contrastText
-		selectionColor: acceptableInput ? root.accent.main : UI.Theme.error.main
-		placeholderTextColor: UI.Theme.text.primary.toString() 
+		color: root.theme.text.primary.toString()
+		selectedTextColor: acceptableInput ? root.accent.contrastText : root.errorAccent.contrastText
+		selectionColor: acceptableInput ? root.accent.main : root.errorAccent.main
+		placeholderTextColor: root.theme.text.primary.toString()
 
 		topPadding: root.type === Inputs.TextField.Type.Standard || root.type === Inputs.TextField.Type.Filled ? root.height * 0.3 : 0
 	}
@@ -103,7 +145,7 @@ T.ComboBox {
 		rotation: root.down ? 180 : 0
 		iconData: Media.Icons.light.keyboardArrowDown
 		size: UI.Size.pixel22
-		color: root.enabled ? UI.Theme.action.active.toString() : UI.Theme.action.disabled.toString()
+		color: root.enabled ? root.theme.action.active.toString() : root.theme.action.disabled.toString()
 
 		Behavior on rotation { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 	}
@@ -112,13 +154,14 @@ T.ComboBox {
 		required property int index
 		required property var model
 
+		checkable: root.checkable
 		implicitHeight: root.delegateHeight
 		horizontalPadding: UI.Size.pixel12
 		width: ListView.view.width
 		useIcons: false
 		highlighted: root.highlightedIndex === index
 		hoverEnabled: root.hoverEnabled
-		color: highlighted || root.currentIndex === index ? UI.Theme.text.primary : UI.Theme.text.secondary
+		color: highlighted || root.currentIndex === index ? root.theme.text.primary : root.theme.text.secondary
 
 		text: model[root.textRole]
 	}
@@ -141,8 +184,8 @@ T.ComboBox {
 			implicitWidth: root.width
 
 			radius: UI.Size.pixel12
-			color: UI.Theme.background.main
-			border.color: UI.Theme.action.disabledBackground
+			color: root.theme.background.main
+			border.color: root.theme.action.disabledBackground
 		}
 
 		contentItem: ListView {
@@ -155,7 +198,9 @@ T.ComboBox {
 			clip: true
 			currentIndex: root.highlightedIndex
 
-			ScrollIndicator.vertical: T.ScrollIndicator {}
+			ScrollBar.vertical: Controls.ScrollBar {
+				policy: _listView.contentHeight > height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+			}
 		}
 	}
 }
