@@ -13,6 +13,7 @@ RowLayout {
     property color backgroundColor: accent.transparent.p24
     property bool showLabel: false
     property bool indeterminate: false
+    property bool smooth: true
     
     property alias barHeight: _bar.height
     property alias label: _label
@@ -74,7 +75,7 @@ RowLayout {
             color: _root.foregroundColor
             radius: _bar.radius
 
-            Behavior on width { enabled: !_root.indeterminate; SmoothedAnimation { duration: 50;} }
+            Behavior on width { enabled: !_root.indeterminate && _root.smooth; SmoothedAnimation { duration: 50;} }
         }
     }
 
