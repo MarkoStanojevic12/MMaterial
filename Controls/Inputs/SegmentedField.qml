@@ -16,7 +16,7 @@ FocusScope {
     property real spacing: UI.Size.pixel8
     property real segmentSize: UI.Size.pixel48
     property real fontSize: UI.Size.pixel28
-    property int inputMethodHints: Qt.ImhDigitsOnly | Qt.ImhNoPredictiveText
+    property int inputMethodHints: Qt.ImhNoPredictiveText
 
     readonly property int maxLength: 1
 
@@ -45,10 +45,20 @@ FocusScope {
     QtObject {
         id: d
 
-        property var validator: RegularExpressionValidator { regularExpression: /^[0-9]$/ }
+        property var validator: RegularExpressionValidator { regularExpression: /^.$/ }
         property list<TextInput> segments: Array(root.length).fill(null)
+        property int pasteStartIndex: 0
+        property bool pasteHandled: false
+        property bool initializing: true
+        property string initialText: ""
+
+        Component.onCompleted: {
+            initialText = root.text
+        }
 
         function updateText() {
+            if (initializing) return
+
             let newText = ""
             for (let i = 0; i < segments.length; i++) {
                 if (segments[i]) {
@@ -72,6 +82,47 @@ FocusScope {
         function moveToPrevious(currentIndex) {
             if (currentIndex > 0) {
                 root.focusSegment(currentIndex - 1)
+            }
+        }
+
+        function handlePaste(pastedText: string) {
+            let segmentIndex = pasteStartIndex
+
+            for (let charIndex = 0; charIndex < pastedText.length && segmentIndex < segments.length; charIndex++) {
+                let ch = pastedText[charIndex]
+
+                if (segments[segmentIndex]) {
+                    let oldText = segments[segmentIndex].text
+                    segments[segmentIndex].text = ch
+
+                    if (segments[segmentIndex].text === ch) {
+                        segmentIndex++
+                    } else {
+                        segments[segmentIndex].text = oldText
+                    }
+                }
+            }
+
+            updateText()
+
+            let focusIndex = Math.min(segmentIndex, segments.length - 1)
+            root.focusSegment(focusIndex)
+
+            if (segmentIndex >= segments.length) {
+                root.editingFinished()
+            }
+        }
+    }
+
+    TextInput {
+        id: pasteHelper
+        visible: false
+
+        onTextChanged: {
+            if (text.length > 0) {
+                d.pasteHandled = true
+                d.handlePaste(text)
+                text = ""
             }
         }
     }
@@ -133,6 +184,9 @@ FocusScope {
 
             Component.onCompleted: {
                 d.segments[index] = segmentInput
+                if (index < d.initialText.length) {
+                    text = d.initialText[index]
+                }
             }
 
             onTextChanged: {
@@ -161,12 +215,23 @@ FocusScope {
                 } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     event.accepted = true
                     root.editingFinished()
+                } else if (event.key === Qt.Key_V && (event.modifiers & Qt.ControlModifier)) {
+                    event.accepted = true
+                    d.pasteStartIndex = index
+                    d.pasteHandled = false
+                    pasteHelper.forceActiveFocus()
+                    pasteHelper.selectAll()
+                    pasteHelper.paste()
+                    if (!d.pasteHandled) {
+                        root.focusSegment(index)
+                    }
                 }
             }
         }
     }
 
     Component.onCompleted: {
-        root.focusSegment(0)
+        d.initializing = false
+        Qt.callLater(() => root.focusSegment(0))
     }
 }
