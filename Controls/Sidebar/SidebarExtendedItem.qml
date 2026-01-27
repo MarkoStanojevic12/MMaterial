@@ -20,6 +20,7 @@ Item {
     property alias text: _title.text
     property alias model: _listView.model
     property alias list: _listView
+    property alias mainItem: _mainItem
     property QtObject chip: null
 
     property bool checked: index == _root.sidebarData.currentIndex
@@ -50,7 +51,7 @@ Item {
 
     states: [
         State{
-            when: _root.isOpen
+            when: _root.isOpen && _listView.count > 0
             name: "open"
             PropertyChanges{ target: _listView; height: _listView.count * (_listView.delegateHeight + _listView.spacing) - _listView.spacing; }
         },

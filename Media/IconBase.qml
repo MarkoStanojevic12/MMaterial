@@ -54,15 +54,15 @@ Item {
     }
 
     Item {
-        height: _root.hoverable ? _root.height : 0
-        width: _root.hoverable ? _root.width : 0
+        height: _root.hoverable || _root.interactive ? _root.height : 0
+        width: _root.hoverable || _root.interactive ? _root.width : 0
 
         HoverHandler {
             id: hoverHandler
 
-            enabled: _root.hoverable
+            enabled: _root.hoverable || _root.interactive
             grabPermissions: PointerHandler.CanTakeOverFromAnything
-            cursorShape: hovered && _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
+            cursorShape: _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
         }
     }
 
