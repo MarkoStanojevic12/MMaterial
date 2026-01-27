@@ -25,6 +25,7 @@ qt_add_qml_module(InputsLib
         OpacitySlider.qml
         InputsBackground.qml
         TextArea.qml
+        SegmentedField.qml
         MultiPickComboBox.qml
     SOURCES
         ${INPUTS_SOURCES}
