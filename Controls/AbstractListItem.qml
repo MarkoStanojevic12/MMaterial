@@ -10,6 +10,7 @@ Rectangle {
     property bool selected: ListView.isCurrentItem
 
     signal clicked
+    signal doubleClicked
 
     opacity: 1
     radius: 8
@@ -68,5 +69,6 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
 
         onClicked: _root.clicked()
+        onDoubleClicked: _root.doubleClicked()
     }
 }
