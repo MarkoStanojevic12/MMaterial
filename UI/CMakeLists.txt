@@ -3,6 +3,7 @@ list(APPEND QML_UI_SINGLETONS
     Theme.qml
     DarkTheme.qml
     LightTheme.qml
+    AutoTheme.qml
     ThemeList.qml
     BasicRed.qml
     BasicGreen.qml

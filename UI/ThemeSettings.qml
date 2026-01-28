@@ -3,6 +3,10 @@ import MMaterial.UI as UI
 import QtQuick
 
 QtObject {
+    // Auto theme switch times (local time, format "HH:mm")
+    property string autoDarkAt: "19:00"
+    property string autoLightAt: "07:00"
+
     property ToolTipSettings tooltip: ToolTipSettings {
         font {
             pixelSize: UI.Size.pixel14

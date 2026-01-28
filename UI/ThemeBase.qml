@@ -4,7 +4,7 @@ import QtQuick
 
 import MMaterial.UI as UI
 
-QtObject{
+Item {
     id: root
 
 	required property UI.PaletteBasic primary

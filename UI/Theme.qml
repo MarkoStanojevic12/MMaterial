@@ -7,7 +7,7 @@ import MMaterial.UI as UI
 UI.ThemeBase{
     id: root
 
-	property UI.ThemeBase currentTheme: UI.DarkTheme
+    property UI.ThemeBase currentTheme: UI.DarkTheme
 	property list<color> chartColors: [root.primary, root.secondary, root.info, root.success, root.warning, root.error]
     property ThemeSettings settings: ThemeSettings {}
 
