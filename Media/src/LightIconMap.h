@@ -18,6 +18,7 @@ public:
     void setConfigUrl(const QUrl &url);
 
     Q_INVOKABLE QString glyph(const QString &name) const;
+    Q_INVOKABLE QStringList getAllNames() const;
 
     QUrl fontUrl() const;
     void setFontUrl(const QUrl &newFontUrl);

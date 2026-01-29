@@ -92,6 +92,19 @@ QString LightIconMap::glyph(const QString &name) const
     return v.isValid() ? v.toString() : QString{};
 }
 
+QStringList LightIconMap::getAllNames() const
+{
+    QStringList names;
+    const auto ks = keys();
+    names.reserve(ks.size());
+    for (const QString &k : ks) {
+        if (const QVariant v = value(k); v.isValid() && v.canConvert<IconData *>()) {
+            names.append(k);
+        }
+    }
+    return names;
+}
+
 void LightIconMap::reload()
 {
     const auto ks = keys();

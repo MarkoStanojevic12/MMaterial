@@ -301,7 +301,7 @@ Item{
 
 	function getAll() : list<string> {
 		let heavyList = root.heavy.getAll();
-		let lightList = root.light.getAll();
+		let lightList = root.light.getAllNames();
 
 		let combinedList = heavyList.slice();
 		for (let i = 0; i < lightList.length; i++) {
