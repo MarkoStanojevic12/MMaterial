@@ -4,5 +4,5 @@ import QtQuick
 
 FontLoader{
     id: iconFont;
-    source: "./assets/icomoon.ttf"
+    source: "qrc:/MMaterial/assets/icomoon.ttf"
 }

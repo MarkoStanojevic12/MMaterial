@@ -6,6 +6,8 @@ list(APPEND QML_ICON_SINGLETONS
 
 list(APPEND ICON_ASSETS
     assets/icomoon.ttf
+    assets/style.css
+    assets/light-icons.default.json
 )
 
 set_source_files_properties(
@@ -21,12 +23,20 @@ qt_add_qml_module(MediaLib
         ${QML_ICON_SINGLETONS}
         Icon.qml
         LightIcon.qml
-        IconData.qml
         HeavyIcon.qml
         IconBase.qml
         IconSet.qml
 
+    SOURCES
+        src/TextFileReader.h src/TextFileReader.cpp
+        src/LightIconMap.h src/LightIconMap.cpp
+        src/IconData.h src/IconData.cpp
+
     RESOURCES ${ICON_ASSETS}
+)
+
+target_include_directories(MediaLib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 set_target_properties(MediaLib PROPERTIES AUTOMOC ON)
@@ -42,4 +52,3 @@ qt_add_resources(MediaLib
     FILES
         ${ICON_ASSETS}
 )
-

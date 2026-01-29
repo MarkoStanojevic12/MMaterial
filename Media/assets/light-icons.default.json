@@ -1,0 +1,5 @@
+{
+  "font": "qrc:/MMaterial/assets/icomoon.ttf",
+  "css": "qrc:/MMaterial/assets/style.css",
+  "prefix": "icon-"
+}
