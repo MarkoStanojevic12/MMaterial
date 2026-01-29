@@ -7,8 +7,23 @@ UI.ThemeBase{
 
     objectName: "Dark UI.Theme"
 
-	primary: UI.BasicGreen
-	secondary: UI.BasicBlue
+    primary: UI.PaletteBasic{
+        darker: "#C8FACD"
+        dark: "#5BE584"
+        main: "#00AB55"
+        light: "#007B55"
+        lighter: "#005249"
+        contrastText: "#FFFFFF"
+    }
+
+    secondary: UI.PaletteBasic{
+        darker: "#D6E4FF"
+        dark: "#84A9FF"
+        main: "#3366FF"
+        light: "#1939B7"
+        lighter: "#091A7A"
+        contrastText: "#FFFFFF"
+    }
 
 	info: UI.PaletteBasic{
         darker: "#CAFDF5"
@@ -70,7 +85,7 @@ UI.ThemeBase{
         hover: root.main.transparent.p8
         selected: root.main.transparent.p16
         disabled: Qt.rgba(active.r, active.g, active.b, 0.80)
-        disabledBackground: root.main.transparent.p20
+        disabledBackground: root.main.transparent.p24
         focus: root.main.transparent.p24
     }
 
@@ -89,5 +104,14 @@ UI.ThemeBase{
         p700: "#454F5B"
         p800: "#1C252E"
         p900: "#141A21"
+    }
+
+    passive: UI.PaletteBasic{
+        darker: root.main.p200
+        dark: root.main.p300
+        main: root.main.p400
+        light:root.main.p700
+        lighter: root.main.p900
+        contrastText: root.text.primary
     }
 }

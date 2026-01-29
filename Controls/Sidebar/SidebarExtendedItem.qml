@@ -105,9 +105,9 @@ Item {
                 name: "checked"
                 when: _root.checked
                 PropertyChanges{ target: _checkableBackground; color: _mainItem.mouseArea.containsMouse ? UI.Theme.primary.transparent.p16 : UI.Theme.primary.transparent.p8; opacity: 1;}
-                PropertyChanges { target: _title; font.variableAxes: { "wght": 600 }; color: UI.Theme.primary.main; }
-                PropertyChanges{ target: _icon; color: UI.Theme.primary.main }
-                PropertyChanges{ target: _arrow; color: UI.Theme.primary.main; }
+                PropertyChanges { target: _title; font.variableAxes: { "wght": 600 }; color: UI.Theme.primary.dark; }
+                PropertyChanges{ target: _icon; color: UI.Theme.primary.dark }
+                PropertyChanges{ target: _arrow; color: UI.Theme.primary.dark; }
             },
             State {
                 name: "unchecked"

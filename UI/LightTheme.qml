@@ -54,14 +54,14 @@ UI.ThemeBase{
     }
 
 	text: UI.PaletteText{
-        primary: root.main.p700
-        secondary: root.main.p500
-        disabled: root.main.p400
+        primary: root.main.p800
+        secondary: root.main.p600
+        disabled: root.main.p500
     }
 
 	background: UI.PaletteBackground{
         main: "#FFFFFF"
-        paper: "#fafafa"
+        paper: root.main.p100
         neutral: root.main.p200
     }
 
@@ -70,7 +70,7 @@ UI.ThemeBase{
         hover: root.main.transparent.p8
         selected: root.main.transparent.p16
         disabled: Qt.rgba(active.r, active.g, active.b, 0.80)
-        disabledBackground: root.main.transparent.p20
+        disabledBackground: root.main.transparent.p24
         focus: root.main.transparent.p24
     }
 
