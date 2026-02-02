@@ -33,7 +33,7 @@ Rectangle {
             when: _root.checked
             name: "Checked"
             PropertyChanges{ target: _root; opacity: 1; border.color: _root.accent.main; color: _root.accent.transparent.p8 }
-            PropertyChanges{ target: _icon; color: _root.accent.main; }
+            PropertyChanges{ target: _icon; color: _root.accent.dark; }
         },
         State{
             when: !_root.checked
