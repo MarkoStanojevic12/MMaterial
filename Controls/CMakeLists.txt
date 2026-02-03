@@ -42,6 +42,7 @@ list(APPEND CONTROLS_QML_FILES
     SwipeBar.qml
     ScrollView.qml
     Chip.qml
+    Stepper.qml
 )
 
 qt_add_qml_module(ControlsLib
