@@ -17,7 +17,6 @@ ListView {
         stepper.decrementCurrentIndex()
     }
 
-    implicitWidth: parent.width
     implicitHeight: orientation == ListView.Horizontal ? UI.Size.pixel64 : contentHeight
 
     clip: true
