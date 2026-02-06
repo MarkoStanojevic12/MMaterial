@@ -243,7 +243,7 @@ Rectangle {
 		BusyIndicator{
 			Layout.alignment: Qt.AlignCenter
 
-			Layout.preferredHeight: _root.height* 0.7
+			Layout.preferredHeight: Math.max(_root.height * 0.7, UI.Size.pixel26)
 			Layout.preferredWidth: height
 
 			Material.accent: _title.color
