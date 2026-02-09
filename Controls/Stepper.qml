@@ -103,6 +103,7 @@ ListView {
                     lineHeight: 1
                     text: index + 1
                     visible: scale > 0
+                    color: UI.Theme.secondary.contrastText
                 }
 
                 Media.Icon {

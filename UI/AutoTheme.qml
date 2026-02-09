@@ -9,6 +9,7 @@ UI.ThemeBase {
 
     property UI.ThemeBase darkTheme: UI.DarkTheme
     property UI.ThemeBase lightTheme: UI.LightTheme
+    readonly property UI.ThemeBase activeTheme: d.activeTheme
 
     QtObject {
         id: d
