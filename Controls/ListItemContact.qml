@@ -50,8 +50,11 @@ AbstractListItem{
 
                 verticalAlignment: Qt.AlignTop
 				color: UI.Theme.text.primary
+                maximumLineCount: 1
                 text: "John Doe"
+                elide: Text.ElideRight
             }
+
 			UI.B2 {
                 id: _subtitle
 
@@ -60,6 +63,8 @@ AbstractListItem{
 
                 verticalAlignment: Qt.AlignBottom
 				color: UI.Theme.text.secondary
+                maximumLineCount: 2
+                wrapMode: Text.WordWrap
                 text: "johhny_doe@gmail.com"
             }
         }
