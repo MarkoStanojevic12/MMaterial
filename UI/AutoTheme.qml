@@ -9,7 +9,35 @@ UI.ThemeBase {
 
     property UI.ThemeBase darkTheme: UI.DarkTheme
     property UI.ThemeBase lightTheme: UI.LightTheme
+
     readonly property UI.ThemeBase activeTheme: d.activeTheme
+
+    primary: d.activeTheme?.primary ?? null
+    secondary: d.activeTheme?.secondary ?? null
+    info: d.activeTheme?.info ?? null
+    success: d.activeTheme?.success ?? null
+    warning: d.activeTheme?.warning ?? null
+    error: d.activeTheme?.error ?? null
+    text: d.activeTheme?.text ?? null
+    background: d.activeTheme?.background ?? null
+    action: d.activeTheme?.action ?? null
+    other: d.activeTheme?.other ?? null
+    main: d.activeTheme?.main ?? null
+    social: d.activeTheme?.social ?? null
+
+    common: d.activeTheme?.common ?? common
+    defaultNeutral: d.activeTheme?.defaultNeutral ?? defaultNeutral
+    passive: d.activeTheme?.passive ?? passive
+
+    Component.onCompleted: d.updateActiveTheme()
+
+    Timer {
+        interval: 60000 // 60 seconds
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: d.updateActiveTheme()
+    }
 
     QtObject {
         id: d
@@ -64,33 +92,4 @@ UI.ThemeBase {
                 d.activeTheme = newTheme;
         }
     }
-
-
-
-    // Component.onCompleted: d.updateActiveTheme()
-
-    Timer {
-        interval: 60000 // 60 seconds
-        running: true
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: d.updateActiveTheme()
-    }
-
-    primary: d.activeTheme?.primary ?? null
-    secondary: d.activeTheme?.secondary ?? null
-    info: d.activeTheme?.info ?? null
-    success: d.activeTheme?.success ?? null
-    warning: d.activeTheme?.warning ?? null
-    error: d.activeTheme?.error ?? null
-    text: d.activeTheme?.text ?? null
-    background: d.activeTheme?.background ?? null
-    action: d.activeTheme?.action ?? null
-    other: d.activeTheme?.other ?? null
-    main: d.activeTheme?.main ?? null
-    social: d.activeTheme?.social ?? null
-
-    common: d.activeTheme?.common ?? common
-    defaultNeutral: d.activeTheme?.defaultNeutral ?? defaultNeutral
-    passive: d.activeTheme?.passive ?? passive
 }

@@ -7,7 +7,7 @@ QtObject{
 
     required property color main
     required property color contrastText
-    property bool isDarkMode: Theme.currentTheme == DarkTheme
+    property bool isDarkMode: Theme.currentTheme == DarkTheme || (Theme.currentTheme == AutoTheme && AutoTheme.activeTheme == DarkTheme)
 
     property color lighter: isDarkMode ? Qt.darker(main, 1.6) : Qt.lighter(main, 1.6)
     property color light: isDarkMode ? Qt.darker(main, 1.3) : Qt.lighter(main, 1.3)
