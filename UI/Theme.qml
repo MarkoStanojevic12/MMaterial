@@ -11,6 +11,8 @@ UI.ThemeBase{
 	property list<color> chartColors: [root.primary, root.secondary, root.info, root.success, root.warning, root.error]
     property ThemeSettings settings: ThemeSettings {}
 
+    readonly property bool isDarkTheme: root.currentTheme == UI.DarkTheme || (root.currentTheme == UI.AutoTheme && root.currentTheme.activeTheme == UI.DarkTheme)
+
 	function setTheme(theme: UI.ThemeBase) : void {
         console.log("Theme switched to " + theme.objectName)
         currentTheme = theme;
