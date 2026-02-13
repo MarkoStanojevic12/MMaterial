@@ -4,6 +4,7 @@ qt_add_qml_module(AnimationsLib
     STATIC
     QML_FILES
         BlinkAnimation.qml
+        CalloutAnimation.qml
 
     SOURCES
         ${INPUTS_SOURCES}
