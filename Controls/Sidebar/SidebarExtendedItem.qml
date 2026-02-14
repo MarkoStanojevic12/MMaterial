@@ -29,7 +29,7 @@ Item {
     property real openingSpeed: 150
     property bool hidden: false
 
-    function selectItem(subindex) : void {
+    property var selectItem: (subindex) => {
 		if (ListView.view) {
             if(typeof index !== "undefined")
                 ListView.view.currentIndex = index;
@@ -140,7 +140,7 @@ Item {
 
                 Layout.alignment: Qt.AlignVCenter
 
-                visible: iconData.path != ""
+                visible: iconData && iconData.path !== ""
                 size: UI.Size.pixel24
 				color: _title.color.toString()
             }
