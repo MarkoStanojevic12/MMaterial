@@ -7,10 +7,10 @@ UI.ThemeBase{
 
     objectName: "Light UI.Theme"
 
-	primary: UI.BasicGreen
-	secondary: UI.BasicBlue
+    primary: UI.BasicGreen
+    secondary: UI.BasicBlue
 
-	info: UI.PaletteBasic{
+    info: UI.PaletteBasic{
         lighter: "#CAFDF5"
         light: "#61F3F3"
         main: "#00B8D9"
@@ -19,7 +19,7 @@ UI.ThemeBase{
         contrastText: "#FFFFFF"
     }
 
-	success: UI.PaletteBasic{
+    success: UI.PaletteBasic{
         lighter: "#D8FBDE"
         light: "#86E8AB"
         main: "#36B37E"
@@ -28,7 +28,7 @@ UI.ThemeBase{
         contrastText: "#FFFFFF"
     }
 
-	warning: UI.PaletteBasic{
+    warning: UI.PaletteBasic{
         lighter: "#FFF5CC"
         light: "#FFD666"
         main: "#FFAB00"
@@ -37,7 +37,7 @@ UI.ThemeBase{
         contrastText: "#212B36"
     }
 
-	error: UI.PaletteBasic{
+    error: UI.PaletteBasic{
         lighter: "#FFE9D5"
         light: "#FFAC82"
         main: "#FF5630"
@@ -46,26 +46,26 @@ UI.ThemeBase{
         contrastText: "#FFFFFF"
     }
 
-	social: UI.PaletteSocial{
+    social: UI.PaletteSocial{
         facebook: "#1877F2"
         twitter: "#00AAEC"
         instagram: "#E02D69"
         linkedin: "#007EBB"
     }
 
-	text: UI.PaletteText{
+    text: UI.PaletteText{
         primary: root.main.p800
         secondary: root.main.p600
         disabled: root.main.p500
     }
 
-	background: UI.PaletteBackground{
-        main: "#FFFFFF"
-        paper: root.main.p100
+    background: UI.PaletteBackground{
+        paper: "#FFFFFF"
+        main: root.main.p100
         neutral: root.main.p200
     }
 
-	action: UI.PaletteAction{
+    action: UI.PaletteAction{
         active: root.main.p600
         hover: root.main.transparent.p8
         selected: root.main.transparent.p16
@@ -74,12 +74,12 @@ UI.ThemeBase{
         focus: root.main.transparent.p24
     }
 
-	other: UI.PaletteOther{
+    other: UI.PaletteOther{
         divider: root.main.p500
         outline: Qt.rgba(divider.r, divider.g, divider.b, 0.2)
     }
 
-	main: UI.PaletteGrey{
+    main: UI.PaletteGrey{
         p100: "#F9FAFB"
         p200: "#F4F6F8"
         p300: "#DFE3E8"
