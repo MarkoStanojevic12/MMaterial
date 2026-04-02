@@ -12,12 +12,13 @@ T.MenuSeparator {
                              implicitContentHeight + topPadding + bottomPadding)
 
     padding: UI.Size.pixel2
-    verticalPadding: padding + UI.Size.pixel4
+    verticalPadding: padding
 
     contentItem: Rectangle {
         radius: UI.Size.pixel6
         implicitWidth: 188
-		implicitHeight: 0.5
+        implicitHeight: 1
+        antialiasing: true
 		color: UI.Theme.text.secondary
     }
 }
