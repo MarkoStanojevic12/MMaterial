@@ -15,6 +15,9 @@ Item {
     height: Size.pixel12
     width: Size.pixel22
 
+    layer.enabled: root.isCharging
+    layer.smooth: true
+
     NumberAnimation {
         target: d
         properties: "displayBatteryPercentage"

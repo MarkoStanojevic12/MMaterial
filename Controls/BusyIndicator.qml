@@ -15,6 +15,9 @@ Item {
 
     visible: opacity > 0 // Change the "show" property instead of "visible" to animate the component properly
 
+    layer.enabled: root.visible
+    layer.smooth: true
+
     states: [
         State {
             name: "show"

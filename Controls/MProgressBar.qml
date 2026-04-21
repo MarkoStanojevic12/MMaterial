@@ -23,6 +23,9 @@ RowLayout {
     implicitWidth: 300
 	implicitHeight: UI.Size.pixel10
 
+    layer.enabled: _root.indeterminate
+    layer.smooth: true
+
     SequentialAnimation {
         id: indeterminateAnimation
 
