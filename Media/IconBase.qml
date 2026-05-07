@@ -48,6 +48,7 @@ Item {
         id: tapHandler
 
         enabled: _root.interactive
+        gesturePolicy: TapHandler.ReleaseWithinBounds
         cursorShape: containsMouse && _root.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
 
         onTapped: if(_root.interactive){ _root.clicked(); }
