@@ -40,23 +40,24 @@ Rectangle {
 
     radius: 8
 
+    Behavior on color { ColorAnimation { duration: 270; easing.type: Easing.InOutQuad } }
+    Behavior on border.color { ColorAnimation { duration: 270; easing.type: Easing.InOutQuad } }
+
     state: "standard"
     states: [
         State{
             name: "standard"
             when: _root.variant == Alert.Variant.Standard
             PropertyChanges{ target: _root; color: _root.accent.lighter; border.width: 0}
-            PropertyChanges{ target: _icon; color: _root.accent.main}
-            PropertyChanges{ target: _closeIcon; color: _root.accent.main}
             PropertyChanges{ target: _text; color: _root.accent.darker}
+            PropertyChanges{ target: _private; animatedIconColor: _root.accent.main}
         },
         State{
             name: "filled"
             when: _root.variant == Alert.Variant.Filled
             PropertyChanges{ target: _root; color: _root.accent.main; border.width: 0}
-            PropertyChanges{ target: _icon; color: _root.accent.contrastText}
-            PropertyChanges{ target: _closeIcon; color: _root.accent.contrastText}
             PropertyChanges{ target: _text; color: _root.accent.contrastText}
+            PropertyChanges{ target: _private; animatedIconColor: _root.accent.contrastText}
             PropertyChanges{ target: _dismissButton; title.color: _root.accent.contrastText; border.color: _root.accent.contrastText }
 			PropertyChanges{ target: _actionButton; title.color: UI.Theme.main.p800; color: UI.Theme.common.white; }
         },
@@ -64,17 +65,15 @@ Rectangle {
             name: "outlined"
             when: _root.variant == Alert.Variant.Outlined
             PropertyChanges{ target: _root; color: UI.Theme.background.main; border.width: UI.Size.pixel1; border.color: _root.accent.dark}
-            PropertyChanges{ target: _icon; color: _root.accent.main}
-            PropertyChanges{ target: _closeIcon; color: _root.accent.main}
             PropertyChanges{ target: _text; color: _root.accent.dark}
+            PropertyChanges{ target: _private; animatedIconColor: _root.accent.main}
         },
         State{
             name: "soft"
             when: _root.variant == Alert.Variant.Soft
             PropertyChanges{ target: _root; color: _root.accent.transparent.p8; border.width: UI.Size.pixel1; border.color: _root.accent.dark}
-            PropertyChanges{ target: _icon; color: _root.accent.dark}
-            PropertyChanges{ target: _closeIcon; color: _root.accent.dark}
             PropertyChanges{ target: _text; color: _root.accent.dark}
+            PropertyChanges{ target: _private; animatedIconColor: _root.accent.dark}
         }
     ]
 
@@ -82,6 +81,10 @@ Rectangle {
         id: _private
 
         readonly property int recommendedHeight: UI.Size.scale * 50
+
+        property color animatedIconColor
+
+        Behavior on animatedIconColor { ColorAnimation { duration: 270; easing.type: Easing.InOutQuad } }
     }
 
     MouseArea {
@@ -109,6 +112,7 @@ Rectangle {
 
             size: UI.Size.pixel24
             iconData: _root.icon
+            color: _private.animatedIconColor
         }
 
 		UI.B2 {
@@ -123,6 +127,8 @@ Rectangle {
             elide: Text.ElideNone
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             lineHeight: 1
+
+            Behavior on color { ColorAnimation { duration: 220; easing.type: Easing.InOutQuad } }
         }
 
         MButton {
@@ -163,6 +169,7 @@ Rectangle {
             size: UI.Size.pixel18
 			iconData: Media.Icons.light.close
             interactive: true
+            color: _private.animatedIconColor
 
             onClicked: _root.close()
         }
