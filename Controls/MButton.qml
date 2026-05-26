@@ -248,6 +248,7 @@ Rectangle {
 
 			Material.accent: _title.color
 			visible: _root.isLoading
+			running: _root.isLoading
 		}
 	}
 
