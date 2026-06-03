@@ -55,6 +55,7 @@ Rectangle {
 	property alias rightIcon: _rightIcon
 
 	signal clicked
+	signal rightClicked
 	signal pressAndHold
 
 	enum Type {
@@ -258,15 +259,19 @@ Rectangle {
 
 		anchors.fill: _root
 
+		acceptedButtons: Qt.LeftButton | Qt.RightButton
 		hoverEnabled: _root.enabled
 		cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
 		enabled: !_root.isLoading
 
 		onPressAndHold: _root.pressAndHold()
-		onClicked: {
+		onClicked: (mouse) => {
 			if (_root.focusPolicy == Qt.ClickFocus || _root.focusPolicy == Qt.StrongFocus)
 				_root.forceActiveFocus()
-			_root.clicked();
+			if (mouse.button === Qt.RightButton)
+				_root.rightClicked();
+			else
+				_root.clicked();
 		}
 	}
 }
