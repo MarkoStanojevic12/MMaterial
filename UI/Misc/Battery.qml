@@ -71,7 +71,7 @@ Item {
 
             anchors {
                 fill: innerRectFrame
-                rightMargin: innerRectFrame.width * (1 - (root.isCharging ? d.displayBatteryPercentage : root.batteryPercentage) / 100)
+                rightMargin: innerRectFrame.width * (1 - Math.min(root.isCharging ? d.displayBatteryPercentage : root.batteryPercentage, 100) / 100)
             }
         }
     }
