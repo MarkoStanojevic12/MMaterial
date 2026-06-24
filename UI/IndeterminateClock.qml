@@ -28,7 +28,7 @@ Item {
         running: root.running
         loops: Animation.Infinite
 
-        UI.EasedAnimation { target: root; property: "phase"; from: 0; to: 1; duration: 800 }
-        UI.EasedAnimation { target: root; property: "phase"; from: 1; to: 0; duration: 800 }
+        UI.EasedAnimation { target: root; property: "phase"; from: 0; to: 1; duration: 1000; easing.type: Easing.InOutCubic }
+        UI.EasedAnimation { target: root; property: "phase"; from: 1; to: 0; duration: 1000; easing.type: Easing.InOutCubic }
     }
 }
