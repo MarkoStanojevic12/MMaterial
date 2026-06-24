@@ -23,35 +23,11 @@ RowLayout {
     implicitWidth: 300
 	implicitHeight: UI.Size.pixel10
 
-    layer.enabled: _root.indeterminate
-    layer.smooth: true
-
-    SequentialAnimation {
-        id: indeterminateAnimation
-
-        running: _root.indeterminate
-        loops: Animation.Infinite
-
-        UI.EasedAnimation {
-            target: _innerBar
-            property: "anchors.leftMargin"
-
-            from: 0
-            to: _bar.width - _innerBar.width
-            duration: 800
-        }
-
-        UI.EasedAnimation {
-            target: _innerBar
-            property: "anchors.leftMargin"
-
-            from: _bar.width - _innerBar.width
-            to: 0
-            duration: 800
-        }
-
-        onFinished: _innerBar.anchors.leftMargin = 0
-    }
+    // Indeterminate sweep is driven by the shared IndeterminateClock so every
+    // progress bar on screen moves in lock-step from a single animation job, and
+    // there is no per-bar layer to re-grab each frame. The ticket keeps the clock
+    // running only while this bar is actually animating.
+    UI.IndeterminateClockTicket { active: _root.indeterminate && _root.visible }
 
     Rectangle {
         id: _bar
@@ -63,6 +39,7 @@ RowLayout {
         color: _root.backgroundColor
         radius: 50
         clip: true
+        antialiasing: true
 
         Rectangle {
             id: _innerBar
@@ -71,10 +48,12 @@ RowLayout {
                 top: _bar.top
                 left: _bar.left
                 bottom: _bar.bottom
+                leftMargin: _root.indeterminate ? UI.IndeterminateClock.phase * (_bar.width - _innerBar.width) : 0
             }
 
             width: _root.indeterminate ? _bar.width * 0.25 : _root.progress * _bar.width / 100
 
+            antialiasing: true
             color: _root.foregroundColor
             radius: _bar.radius
 

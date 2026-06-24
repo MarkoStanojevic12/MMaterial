@@ -12,9 +12,11 @@ list(APPEND QML_UI_SINGLETONS
     BasicOrange.qml
     BasicLightBlue.qml
     Size.qml
+    IndeterminateClock.qml
 )
 
 list(APPEND UI_QML_FILES
+    IndeterminateClockTicket.qml
     PaletteTransparent.qml
     PaletteCommon.qml
     PaletteBackground.qml
