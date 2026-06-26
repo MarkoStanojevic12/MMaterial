@@ -6,11 +6,14 @@ import MMaterial.UI as UI
 T.ToolTip {
     id: control
 
+    property real maximumWidth: UI.Size.scale * 550
+
     x: parent ? (parent.width - implicitWidth) / 2 : 0
     y: -implicitHeight - 3
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            contentWidth + leftPadding + rightPadding)
+    implicitWidth: Math.min(control.maximumWidth,
+                            Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                                     contentWidth + leftPadding + rightPadding))
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
 
