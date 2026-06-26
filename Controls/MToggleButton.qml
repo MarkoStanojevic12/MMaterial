@@ -36,6 +36,12 @@ Rectangle {
             PropertyChanges{ target: _icon; color: _root.accent.dark; }
         },
         State{
+            when: mouseArea.containsMouse
+            name: "Hovered"
+            PropertyChanges{ target: _root; opacity: 1; border.color: UI.Theme.passive.main; color: UI.Theme.passive.transparent.p8 }
+            PropertyChanges{ target: _icon; color: UI.Theme.passive.dark; }
+        },
+        State{
             when: !_root.checked
             name: "Unchecked"
             PropertyChanges{ target: _root; opacity: 1; border.color: UI.Theme.main.transparent.p24; color: "transparent" }
