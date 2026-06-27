@@ -149,7 +149,7 @@ void LightIconMap::reload()
         const QString hex = m.captured(2);
 
         bool ok = false;
-        const uint code = hex.toUInt(&ok, 16);
+        const char32_t code = hex.toUInt(&ok, 16);
         if (!ok || code == 0 || code > 0x10FFFF)
             continue;
 
