@@ -108,7 +108,7 @@ T.ComboBox {
 		theme: root.theme
 		rootItem: root
 		ignoreDisabledColoring: root.enabled
-		showPlaceholder: root.showPlaceholder === null ? (!root.focus && root.currentText === "" && !root.down && root.placeholderText !== "") : root.showPlaceholder
+		showPlaceholder: root.showPlaceholder === null ? (!root.focus && (root.editable ? root.editText : root.currentText) === "" && !root.down && root.placeholderText !== "") : root.showPlaceholder
 		leftIcon: _leftIcon
 		iconContainer: _mainContainer
 		errorAccent: root.errorAccent
