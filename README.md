@@ -38,6 +38,7 @@ MMaterial provides various submodules that can be imported and used within your 
 - `MMaterial.Media` - Built-in Material icons, images, and media formating tools
 - `MMaterial.Charts` - Size guidelines for Material components
 - `MMaterial.Network` - Components that use the network in one way or another
+- `MMaterial.Onboarding` - Driver.js-style guided tours and element highlights (`Tour`, `TourStep`, `Highlight`)
 
 To use a specific submodule, import it in your QML file:
 
