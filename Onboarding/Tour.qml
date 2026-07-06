@@ -442,6 +442,49 @@ Item {
                 visible: !overlay.targetInteractive
             }
 
+            // Sonar ping around the cutout while the step can only advance
+            // through the user's own action (interaction allowed, Next hidden).
+            Rectangle {
+                id: attentionPulse
+
+                readonly property bool active: overlay.targetInteractive
+                                               && !(root.currentStep?.nextButtonVisible ?? true)
+                                               && !overlay.centeredStep
+                readonly property real maxSpread: UI.Size.pixel16
+                property real spread: 0
+
+                visible: attentionPulse.active
+                color: "transparent"
+                radius: stage.cornerRadius + attentionPulse.spread
+                opacity: (1 - attentionPulse.spread / attentionPulse.maxSpread) * 0.9
+
+                border {
+                    width: UI.Size.pixel2
+                    color: UI.Theme.primary.main
+                }
+
+                x: stage.x - attentionPulse.spread
+                y: stage.y - attentionPulse.spread
+                width: stage.width + attentionPulse.spread * 2
+                height: stage.height + attentionPulse.spread * 2
+
+                SequentialAnimation {
+                    running: attentionPulse.active
+                    loops: Animation.Infinite
+
+                    NumberAnimation {
+                        target: attentionPulse
+                        property: "spread"
+                        from: 0
+                        to: attentionPulse.maxSpread
+                        duration: 1100
+                        easing.type: Easing.OutCubic
+                    }
+
+                    PauseAnimation { duration: 350 }
+                }
+            }
+
             Rectangle {
                 id: popover
 
