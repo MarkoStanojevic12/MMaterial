@@ -8,6 +8,7 @@ qt_add_qml_module(DialogsLib
         LargeImageDialog.qml
         MediumImageDialog.qml
         InputDialog.qml
+        NotificationDialog.qml
 )
 
 set_target_properties(DialogsLib PROPERTIES AUTOMOC ON)
