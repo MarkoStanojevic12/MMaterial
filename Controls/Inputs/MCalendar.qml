@@ -13,22 +13,61 @@ ColumnLayout {
     property var beginDate: d.firstSelectedDate ?? null
     property var endDate: d.lastSelectedDate ?? null
 
+    // The month shown; the current one at first
     property alias currentMonth: grid.month
     property alias currentYear: grid.year
 
+    // Month and day names, and the first day of the week (Qt.locale("sr_Latn_RS") starts on Monday)
+    property alias locale: grid.locale
+    // How the days of the week are named above the grid: Locale.NarrowFormat ("M"), ShortFormat
+    // ("Mon") or LongFormat
+    property int dayNameFormat: Locale.NarrowFormat
+    property string noDateText: qsTr("No date selected")
+    // A first tap picks a day and a second one the other end of a range; false: every tap picks
+    // one day
+    property bool rangeSelection: true
+
     property var dateFormater: (date) => {
         if (!date)
-            return qsTr("No date selected");
+            return calendarRoot.noDateText;
         var year = date.getFullYear().toString().slice(-2);
-        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var month = monthNames[date.getMonth()];
+        var month = calendarRoot.locale.monthName(date.getMonth(), Locale.ShortFormat);
         var day = String(date.getDate()).padStart(2, '0');
         return `${month} ${day}, '${year}`;
     }
 
+    // The month's name on its own, capitalized ("October", "Oktobar")
     property var monthName: (date) => {
-        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        return monthNames[date.getMonth()];
+        const name = calendarRoot.locale.standaloneMonthName(date.getMonth(), Locale.LongFormat);
+        return name.charAt(0).toLocaleUpperCase() + name.slice(1);
+    }
+
+    // Shows the month of `date`
+    function showMonth(date) {
+        if (!date)
+            return;
+        grid.year = date.getFullYear();
+        grid.month = date.getMonth();
+    }
+
+    // Selects the days from `begin` through `end` (one day when `end` is missing) and shows the
+    // month of `begin`; without `begin` it clears the selection
+    function select(begin, end) {
+        dateMA.selectionActive = false;
+        if (!begin) {
+            d.reset();
+            return;
+        }
+        const first = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate());
+        const last = end ? new Date(end.getFullYear(), end.getMonth(), end.getDate()) : first;
+        const swap = d.compareDates(last, first) < 0;
+        d.firstSelectedDate = swap ? last : first;
+        d.lastSelectedDate = swap ? first : last;
+        calendarRoot.showMonth(d.firstSelectedDate);
+    }
+
+    function clearSelection() {
+        calendarRoot.select(null);
     }
 
     function nextMonth() {
@@ -117,6 +156,8 @@ ColumnLayout {
             id: dayDelegate
 
             required property string narrowName
+            required property string shortName
+            required property string longName
 
             Layout.preferredWidth: UI.Size.pixel36
             Layout.preferredHeight: UI.Size.pixel40
@@ -124,7 +165,8 @@ ColumnLayout {
 			UI.Caption {
                 anchors.fill: dayDelegate
 
-                text: dayDelegate.narrowName
+                text: calendarRoot.dayNameFormat === Locale.LongFormat ? dayDelegate.longName
+                      : calendarRoot.dayNameFormat === Locale.ShortFormat ? dayDelegate.shortName : dayDelegate.narrowName
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 color: UI.Theme.text.secondary
@@ -140,8 +182,8 @@ ColumnLayout {
         }
 
         spacing: UI.Size.pixel1 * 2
-        month: Calendar.December
-        year: 2024
+        month: new Date().getMonth()
+        year: new Date().getFullYear()
         locale: Qt.locale("en_US")
         implicitWidth: calendarRoot.width
 
@@ -232,11 +274,11 @@ ColumnLayout {
 
 				let date = d.highlightedElement.date;
 
-				if (!selectionActive) {
+				if (!selectionActive || !calendarRoot.rangeSelection) {
 					// Start new selection
 					d.firstSelectedDate = date;
 					d.lastSelectedDate = date;
-					selectionActive = true;
+					selectionActive = calendarRoot.rangeSelection;
 				} else {
 					// Complete the range selection
 					if (d.compareDates(date, d.firstSelectedDate) < 0) {

@@ -19,6 +19,39 @@ Dialogs.Dialog {
     readonly property string startDateString: calendar.dateFormater(startDate)
     readonly property string endDateString: calendar.dateFormater(endDate)
 
+    // The calendar's names and first day of the week, and how it shows a picked date (the dialog's
+    // own `locale` can't be overridden)
+    property alias calendarLocale: calendar.locale
+    property alias dayNameFormat: calendar.dayNameFormat
+    property alias dateFormater: calendar.dateFormater
+    property alias noDateText: calendar.noDateText
+    // false: a tap picks one day (startDate and endDate are the same)
+    property alias rangeSelection: calendar.rangeSelection
+    property alias currentMonth: calendar.currentMonth
+    property alias currentYear: calendar.currentYear
+
+    property string headerText: qsTr("Select date")
+    property string rejectText: qsTr("Cancel")
+    property string acceptText: qsTr("OK")
+    // The accept button only emits dateAccepted; the receiver closes the dialog
+    property bool acceptEnabled: true
+
+    // Shown below the calendar (times, notes); the dialog grows by its height
+    property Component extraContent: null
+    readonly property alias extraItem: extraLoader.item
+
+    function showMonth(date) {
+        calendar.showMonth(date);
+    }
+
+    function select(begin, end) {
+        calendar.select(begin, end);
+    }
+
+    function clearSelection() {
+        calendar.clearSelection();
+    }
+
     property var yearSpan: (from, to, currentYear) => {
                                let years = [];
                                for (let year = from; year <= to; year++) {
@@ -29,7 +62,7 @@ Dialogs.Dialog {
 
     signal dateAccepted(var startDate, var endDate)
 
-    implicitHeight: 504 * UI.Size.scale
+    implicitHeight: 504 * UI.Size.scale + (extraLoader.item ? extraLoader.height + UI.Size.pixel8 : 0)
     implicitWidth: 319 * UI.Size.scale
 
     contentItem: Item {
@@ -41,7 +74,7 @@ Dialogs.Dialog {
             anchors.top: dialogContentRoot.top
             width: dialogContentRoot.width
 
-            text: qsTr("Select date")
+            text: root.headerText
             color: UI.Theme.text.secondary
         }
 
@@ -221,22 +254,33 @@ Dialogs.Dialog {
 
             anchors {
                 top: controlsRow.bottom
-                bottom: dialogContentRoot.bottom
+                bottom: extraLoader.item ? extraLoader.top : dialogContentRoot.bottom
+                bottomMargin: extraLoader.item ? UI.Size.pixel8 : 0
             }
+        }
+
+        Loader {
+            id: extraLoader
+
+            width: dialogContentRoot.width
+            height: item ? (item as Item).implicitHeight : 0
+            anchors.bottom: dialogContentRoot.bottom
+            sourceComponent: root.extraContent
         }
     }
 
     Item { Layout.fillWidth: true }
 
     Dialogs.Dialog.DialogButton {
-        text: qsTr("Cancel")
+        text: root.rejectText
         type: Controls.MButton.Type.Text
         onClicked: root.close()
     }
 
     Dialogs.Dialog.DialogButton {
-        text: qsTr("OK")
+        text: root.acceptText
         type: Controls.MButton.Type.Text
+        enabled: root.acceptEnabled
         onClicked: root.dateAccepted(root.startDate, root.endDate);
 
     }
