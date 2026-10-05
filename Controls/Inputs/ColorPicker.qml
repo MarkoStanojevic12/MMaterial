@@ -89,7 +89,9 @@ Dialogs.Dialog {
     }
 
     implicitWidth: 300 * UI.Size.scale
-    implicitHeight: mainLayout.implicitHeight + padding * 2
+    // The header shows only with a title (or icon); then the layout starts below it
+    implicitHeight: mainLayout.implicitHeight + topPadding + bottomPadding
+                    + (header && header.visible ? header.implicitHeight + spacing : 0)
     padding: UI.Size.pixel20
 
     onAccepted: () => {

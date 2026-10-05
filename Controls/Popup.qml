@@ -8,10 +8,29 @@ import MMaterial.UI as UI
 T.Popup {
     id: control
 
+    // An X in the top-right corner that closes the popup, above the content
+    property bool showXButton: false
+
+    readonly property CloseButton xButton: CloseButton {
+        // The popup's own item, which holds the background and the content
+        parent: control.contentItem ? control.contentItem.parent : null
+        x: parent ? parent.width - width - UI.Size.pixel4 : 0
+        y: UI.Size.pixel4
+        z: 1
+        visible: control.showXButton
+
+        onClicked: control.close()
+    }
+
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             contentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
+
+    // A modal popup takes the keyboard, so Esc closes it (closePolicy permitting) and the keys don't
+    // reach the page behind it. A modeless one leaves it where it is. Set it false for a modal
+    // popup that only informs (a loading screen).
+    focus: control.modal
 
     background: Rectangle {
 		radius: UI.Size.pixel6

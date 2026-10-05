@@ -28,6 +28,7 @@ list(APPEND CONTROLS_QML_FILES
     CornerRadii.qml
     MaskedImage.qml
     Popup.qml
+    CloseButton.qml
     ScrollBar.qml
     Menu.qml
     MenuItem.qml

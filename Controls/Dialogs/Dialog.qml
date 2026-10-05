@@ -15,8 +15,20 @@ T.Dialog {
     property Media.IconData iconData: null
 	property real iconSize: UI.Size.pixel24
     property color textColor: UI.Theme.text.secondary
+    // An X in the top-right corner that rejects the dialog, above the content
     property bool showXButton: false
 	property real maxWidth: 480 * UI.Size.scale
+
+    readonly property Controls.CloseButton xButton: Controls.CloseButton {
+        // The dialog's own item, which holds the background, header, content and footer
+        parent: control.contentItem ? control.contentItem.parent : null
+        x: parent ? parent.width - width - UI.Size.pixel4 : 0
+        y: UI.Size.pixel4
+        z: 1
+        visible: control.showXButton
+
+        onClicked: control.reject()
+    }
 
 	component DialogButton: Controls.MButton {
         Layout.alignment: Qt.AlignRight
@@ -69,24 +81,6 @@ T.Dialog {
 			width: control.dim ? 0 : 1
 			color: UI.Theme.other.outline
 		}
-
-        Media.Icon {
-            id: closeIcon
-
-            visible: control.showXButton
-            iconData: Media.Icons.light.close
-            size: UI.Size.pixel12
-			color: UI.Theme.text.primary.toString()
-            interactive: true
-
-            anchors {
-                right: bgRoot.right;
-                top: bgRoot.top;
-                margins: UI.Size.pixel6
-            }
-
-            onClicked: control.reject()
-        }
     }
 
     font {
