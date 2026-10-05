@@ -11,8 +11,24 @@ Shape {
 	property real subPeakWidth: -0.27    // 0 = sharp control points, 1 = wide pull
 	property color color: Theme.background.paper
 
+	// The y where the hill meets its base. Lay the shape over what it grows out of (a rectangle of the
+	// same color) with this line on that rectangle's top edge: the hill's feet run flat into the edge,
+	// so the two read as one shape at any size. Below the line the shape is a plain band.
+	readonly property real baseY: d.ny(320)
+	// The hill above baseY; center a label in it
+	readonly property alias hill: hill
+
 	width: root.size
 	height: root.size * 62 / 144
+	// Smooth curve edges, without multisampling
+	preferredRendererType: Shape.CurveRenderer
+
+	Item {
+		id: hill
+
+		width: root.width
+		height: root.baseY
+	}
 
 	QtObject {
 		id: d
@@ -41,36 +57,35 @@ Shape {
 		fillColor: root.color
 
 		startX: 0
-		startY: d.ny(320)
+		startY: root.baseY
 
-		// First half of hill
+		// First half of hill. Its foot leaves baseY flat: the first control point is on that line.
 		PathCubic {
 			x: root.width * 0.5
 			y: d.ny(192)
 
 			control1X: d.computeX(d.leftControl1X, -1)
-			control1Y: d.ny(300)
+			control1Y: root.baseY
 
 			control2X: d.computeX(d.leftControl2X, +1)
 			control2Y: d.ny(192)
 		}
 
-		// Second half of hill
+		// Second half of hill, back down flat onto baseY
 		PathCubic {
 			x: root.width
-			y: d.ny(320)
+			y: root.baseY
 
 			control1X: d.computeX(d.rightControl1X, -1)
 			control1Y: d.ny(192)
 
 			control2X: d.computeX(d.rightControl2X, +1)
-			control2Y: d.ny(300)
+			control2Y: root.baseY
 		}
 
 		// Closing the shape
 		PathLine { x: root.width; y: d.ny(384) }
 		PathLine { x: 0; y: d.ny(384) }
-		PathLine { x: 0; y: d.ny(320) }
+		PathLine { x: 0; y: root.baseY }
 	}
 }
-
