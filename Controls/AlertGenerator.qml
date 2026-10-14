@@ -14,8 +14,20 @@ Popup {
     property int edgeOf: Item.TopLeft //TopRight, BottomLeft, BottomRight
     property int defaultVariant: Alert.Variant.Standard
 
-    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left ? 20 : Overlay.overlay.width - 20 - width
-    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top ? 20 : Overlay.overlay.height - 20 - height
+    // The window's safe area (a phone's status and navigation bars, a notch): the overlay covers
+    // the whole window, so the alerts keep this far from its edges on top of the 20 px gap
+    property real safeMarginTop: _root.windowSafeArea ? _root.windowSafeArea.margins.top : 0
+    property real safeMarginBottom: _root.windowSafeArea ? _root.windowSafeArea.margins.bottom : 0
+    property real safeMarginLeft: _root.windowSafeArea ? _root.windowSafeArea.margins.left : 0
+    property real safeMarginRight: _root.windowSafeArea ? _root.windowSafeArea.margins.right : 0
+
+    readonly property var windowSafeArea: Overlay.overlay && Overlay.overlay.Window.contentItem
+                                          ? Overlay.overlay.Window.contentItem.SafeArea : null
+
+    x: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.BottomLeft || _root.edgeOf === Item.Left
+       ? 20 + _root.safeMarginLeft : Overlay.overlay.width - 20 - _root.safeMarginRight - width
+    y: _root.edgeOf === Item.TopLeft || _root.edgeOf === Item.TopRight || _root.edgeOf === Item.Top
+       ? 20 + _root.safeMarginTop : Overlay.overlay.height - 20 - _root.safeMarginBottom - height
 
     enter: null
 
