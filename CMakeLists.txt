@@ -20,7 +20,6 @@ qt_add_resources(MMaterialLib
     "mmaterial_assets"
     BASE "${CMAKE_CURRENT_SOURCE_DIR}"
     PREFIX "MMaterial"
-    BIG_RESOURCES
     FILES
         ${PNG_ASSETS}
         ${JPEG_ASSETS}

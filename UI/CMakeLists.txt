@@ -74,7 +74,6 @@ qt_add_resources(MMaterialLib
     "mmaterial_font_assets"
     BASE "${CMAKE_CURRENT_SOURCE_DIR}"
     PREFIX "MMaterial"
-    BIG_RESOURCES
     FILES
     ${FONT_ASSETS}
 )

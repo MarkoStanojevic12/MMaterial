@@ -38,7 +38,6 @@ qt_add_resources(MediaLib
     "mmaterial_icon_assets"
     BASE "${CMAKE_CURRENT_SOURCE_DIR}"
     PREFIX "MMaterial"
-    BIG_RESOURCES
     FILES
         ${ICON_ASSETS}
 )
